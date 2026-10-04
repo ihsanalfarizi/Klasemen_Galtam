@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Klasemen Galatama</title>
+<title>Galatama Taaronnn7Store X NicotinStore</title>
 <style>
 :root{--grid:#BFBFBF;--ink:#000;--muted:#3D3D3D;--sheet-bg:#F3F3F3;--cell-bg:#fff;--title-bg:#FFFF00;--head-bg:#F5A623;--poin-head:#F8CBAD;--green:#137E43;--red:#C0392B;--sel-border:#107C41;--sep:#555;--zero-bg:#F4B6B0;--pos-bg:#A8E6B4;--fs:clamp(12px,1.45vw,24px);}
 *{box-sizing:border-box;}
@@ -28,6 +28,11 @@ tbody tr.zero td.name-cell, tbody td.poin-cell.zero{background:var(--zero-bg);}
 tbody tr.pos td.name-cell, tbody td.poin-cell.pos{background:var(--pos-bg);}
 tbody td.poin-cell.zero input.points{color:#B71C1C;}
 tbody td.poin-cell.pos input.points{color:#0B4A28;}
+
+
+/* Belum ada nama peserta + poin 0 = putih (bersih) */
+tbody tr.zero.blank:not(.search-hit) td.name-cell, tbody tr.zero.blank:not(.search-hit) td.poin-cell{background:var(--cell-bg);}
+tbody tr.zero.blank td.poin-cell input.points{color:#9A9A9A;}
 
 
 /* Warna juara 1-3 (hanya jika poin > 0) */
@@ -160,7 +165,7 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
       </table></div>
     </div>
   </div>
-  <div class="copyright">© Hak Cipta by Aaronnn</div>
+  <div class="copyright">© Hak Cipta by Aaronn</div>
 </div>
 
 <div class="modal-overlay" id="histModal">
@@ -335,6 +340,8 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
 
   // Warna baris (Nama Peserta, Nama Display, POIN): poin 0 = merah, di atas 0 = hijau
   function applyScoreColor(tr, td, points){
+    const tm = teams.find(x => x.id === Number(tr.dataset.id));
+    tr.classList.toggle('blank', !tm || (tm.name || '').trim() === '');
     tr.classList.toggle('zero', points <= 0);
     tr.classList.toggle('pos', points > 0);
     td.classList.toggle('zero', points <= 0);
@@ -393,6 +400,7 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
       t.name = e.target.value;
       if(t.name.trim() === '') t.slotTime = 0;
       else if(!t.slotTime) t.slotTime = Date.now();
+      tr.classList.toggle('blank', t.name.trim() === '');
       updateSlotInfo();
     });
     nameInput.addEventListener('change', () => scheduleRender());
