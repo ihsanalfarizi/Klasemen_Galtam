@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Galatama Taaronnn7Store X NicotinStore</title>
+<title>Klasemen Galatama</title>
 <style>
 :root{--grid:#BFBFBF;--ink:#000;--muted:#3D3D3D;--sheet-bg:#F3F3F3;--cell-bg:#fff;--title-bg:#FFFF00;--head-bg:#F5A623;--poin-head:#F8CBAD;--green:#137E43;--red:#C0392B;--sel-border:#107C41;--sep:#555;--zero-bg:#F4B6B0;--pos-bg:#A8E6B4;--fs:clamp(12px,1.35vw,24px);}
 *{box-sizing:border-box;}
@@ -12,9 +12,9 @@ body{margin:0;min-height:100vh;background:var(--sheet-bg);font-family:Calibri,'S
 .wrap{max-width:1650px;margin:0 auto;}
 .panel{background:var(--cell-bg);border:1px solid var(--grid);border-radius:4px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
 .tables{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-@media (max-width:820px){.tables{grid-template-columns:1fr;}col.col-name{width:21%;}col.col-nick{width:27%;}col.col-points{width:28%;}col.col-pay{width:8%;}col.col-hist{width:11%;}}
+@media (max-width:820px){.tables{grid-template-columns:1fr;}col.col-rank{width:6%;}col.col-name{width:21%;}col.col-nick{width:24%;}col.col-points{width:31%;}col.col-pay{width:8%;}col.col-hist{width:10%;}}
 table{width:100%;border-collapse:collapse;table-layout:fixed;background:var(--cell-bg);font-size:var(--fs);}
-col.col-rank{width:5%;} col.col-name{width:24%;} col.col-nick{width:30%;} col.col-points{width:23%;} col.col-pay{width:8%;} col.col-hist{width:10%;}
+col.col-rank{width:5%;} col.col-name{width:23%;} col.col-nick{width:29%;} col.col-points{width:25%;} col.col-pay{width:8%;} col.col-hist{width:10%;}
 th.colhead{background:var(--head-bg);border:1px solid var(--grid);font-weight:800;font-size:1em;color:var(--ink);text-align:center;padding:.6em 2px;}
 th.colhead.poin{background:var(--poin-head);}
 thead th:last-child{font-size:.72em;padding:.85em 0;white-space:nowrap;overflow:hidden;letter-spacing:0;}
@@ -73,9 +73,12 @@ input.points-add:focus{outline:none;border-color:var(--green);border-style:solid
 .add-btn{width:1.3em;min-width:1.3em;height:1.8em;flex:none;border-radius:2px;border:1px solid var(--green);background:rgba(255,255,255,.7);color:var(--green);font-family:inherit;font-weight:700;font-size:1em;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;}
 .add-btn:hover{background:#fff;} .add-btn:active{transform:scale(.9);}
 
-/* Tombol pilih jenis ikan */
-.fish-btn{width:1.5em;height:1.8em;flex:none;border-radius:2px;border:1px solid var(--head-bg);background:#FFF8E1;font-size:1em;line-height:1;cursor:pointer;padding:0;}
-.fish-btn:active{transform:scale(.9);}
+/* Tombol pilih jenis ikan (gambar) */
+.fish-btn{height:1.8em;flex:none;border-radius:4px;border:2px solid #1565C0;background:#E3F2FD;cursor:pointer;padding:0 .25em 0 .15em;display:flex;align-items:center;justify-content:center;gap:.1em;font-family:inherit;white-space:nowrap;}
+.fish-btn img{height:1.5em;width:auto;display:block;pointer-events:none;}
+.fish-btn span{font-weight:900;font-size:.62em;color:#0D47A1;letter-spacing:.3px;}
+.fish-btn:hover{background:#BBDEFB;border-color:#0D47A1;}
+.fish-btn:active{transform:scale(.93);}
 .fish-opt{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:2px solid #E1E1E1;font-size:24px;font-weight:800;cursor:pointer;}
 .fish-opt input{width:30px;height:30px;accent-color:var(--green);}
 .fish-opt .fp{margin-left:auto;color:var(--green);font-weight:900;}
@@ -119,6 +122,8 @@ input.points-add:focus{outline:none;border-color:var(--green);border-style:solid
 .rules-text u{text-decoration-thickness:2px;text-underline-offset:3px;color:#0B4A28;}
 @media (max-width:820px){.rules-text{font-size:20px;}.rules-title{font-size:18px;}}
 
+.top-row{display:flex;align-items:stretch;gap:10px;margin:0 0 8px;}
+.top-row .search-bar{flex:1;min-width:0;margin:0;}
 .search-bar{display:flex;align-items:center;gap:6px;margin:0 0 8px;padding:2px 8px;background:#fff;border:2px solid var(--head-bg);border-radius:6px;}
 .search-bar:focus-within{border-color:var(--sel-border);}
 .search-bar.active{border-color:#E65100;background:#FFF8E1;}
@@ -136,8 +141,8 @@ tbody tr.search-hit td,tbody tr.search-hit td.name-cell,tbody tr.search-hit td.p
 tbody tr.search-hit td:first-child{box-shadow:inset 4px 0 0 #E65100,inset 0 4px 0 #E65100,inset 0 -4px 0 #E65100;}
 tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 0 #E65100,inset 0 -4px 0 #E65100;}
 
-.slot-badge{flex:none;display:inline-flex;align-items:center;gap:.4em;font-weight:900;font-size:calc(var(--fs)*.75);white-space:nowrap;padding:.15em .3em .15em .7em;border-radius:999px;background:#FFF8E1;border:1px solid var(--head-bg);color:var(--ink);}
-.slot-badge .slot-num{display:inline-block;min-width:1.6em;padding:.05em .45em;border-radius:999px;background:var(--green);color:#fff;text-align:center;font-weight:900;}
+.slot-badge{flex:none;display:inline-flex;align-items:center;align-self:center;gap:.5em;font-weight:900;font-size:calc(var(--fs)*.8);white-space:nowrap;padding:.2em .35em .2em .9em;border-radius:999px;background:#FFF8E1;border:2px solid var(--head-bg);color:var(--ink);}
+.slot-badge .slot-num{display:inline-block;min-width:1.7em;padding:.05em .5em;border-radius:999px;background:var(--green);color:#fff;text-align:center;font-weight:900;font-size:1.25em;line-height:1.3;}
 .slot-badge.full .slot-num{background:var(--red);}
 
 .copyright{margin-top:14px;text-align:center;font-weight:800;font-size:calc(var(--fs)*.9);color:var(--muted);letter-spacing:.3px;}
@@ -148,15 +153,17 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
   <div class="panel">
     <div class="rules-note">
       <span class="rules-title">Rules</span>
-      <span class="rules-text">Jika poin sama, urutan peringkat: (1) Nama <u>Bin</u> paling atas. (2) Sesama Bin, yang <u>slot lebih awal</u> di atas. (3) Selain Bin, yang <u>slot lebih awal</u> di atas.</span>
+      <span class="rules-text">Jika poin sama, urutan peringkat: (1) Nama <u>Bin</u> paling atas. (2) Sesama Bin, yang <u>slot lebih awal</u> di atas.</span>
     </div>
+    <div class="top-row">
     <div class="search-bar">
       <span class="search-icon">🔍</span>
       <input type="text" id="searchInput" placeholder="Cari Nama Display, Enter untuk isi poin..." autocomplete="off">
       <span class="search-key" title="Pintasan keyboard">Ctrl+F</span>
       <span id="searchCount"></span>
       <button type="button" id="searchClear" title="Hapus pencarian (Esc)">✕</button>
-      <span class="slot-badge" id="slotInfo" title="Jumlah Nama Peserta yang masih kosong">Sisa Slot <span class="slot-num" id="slotLeft">0</span></span>
+    </div>
+    <div class="slot-badge" id="slotInfo" title="Jumlah Nama Peserta yang masih kosong"><span class="slot-label">Sisa Slot</span><span class="slot-num" id="slotLeft">0</span></div>
     </div>
     <div class="tables">
       <div class="table-scroll"><table>
@@ -171,7 +178,7 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
       </table></div>
     </div>
   </div>
-  <div class="copyright">© Hak Cipta by Aaronn</div>
+  <div class="copyright">© Copyright by Aaronn</div>
 </div>
 
 <div class="modal-overlay" id="histModal">
@@ -213,6 +220,18 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
     defaultTeams.push({ id:i, name:namaPeserta[i-1], nickname:nicknamePeserta[i-1], points:0, paid:false, slotTime:0, history:[] });
   }
   let teams = JSON.parse(JSON.stringify(defaultTeams));
+
+  // Gambar ikan (SVG tertanam, tidak perlu file luar). Untuk pakai gambar sendiri,
+  // ganti isi FISH_IMG dengan data URI / nama file gambar, mis. 'ikan.png'
+  const FISH_SVG =
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">' +
+    '<circle cx="28" cy="36" r="26" fill="#FFB300" stroke="#6D4000" stroke-width="4"/>' +
+    '<circle cx="28" cy="36" r="19" fill="#FFD54F" stroke="#6D4000" stroke-width="2.5"/>' +
+    '<text x="28" y="48" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="36" fill="#6D4000">P</text>' +
+    '<circle cx="50" cy="14" r="13" fill="#2E7D32" stroke="#fff" stroke-width="3"/>' +
+    '<path d="M50 7 V21 M43 14 H57" stroke="#fff" stroke-width="5" stroke-linecap="round"/>' +
+    '</svg>';
+  const FISH_IMG = 'data:image/svg+xml;utf8,' + encodeURIComponent(FISH_SVG);
 
   const tbodyTop = document.getElementById('tableBodyTop');
   const tbodyBottom = document.getElementById('tableBodyBottom');
@@ -371,13 +390,16 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
 
   function isBin(team){ return /\bbin\b/i.test(team.name || ''); }
   function slotKey(t){ return t.slotTime || Infinity; }
+  // Urutan: poin terbanyak -> nama Bin di atas -> sesama Bin, slot lebih awal -> sisanya urutan baris
   function getSorted(){
     return [...teams].sort((a,b) => {
       if(b.points !== a.points) return b.points - a.points;
       const aBin = isBin(a), bBin = isBin(b);
       if(aBin !== bBin) return aBin ? -1 : 1;
-      const ka = slotKey(a), kb = slotKey(b);
-      if(ka !== kb) return ka < kb ? -1 : 1;
+      if(aBin && bBin){
+        const ka = slotKey(a), kb = slotKey(b);
+        if(ka !== kb) return ka < kb ? -1 : 1;
+      }
       return a.id - b.id;
     });
   }
@@ -525,7 +547,14 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
     const fishBtn = document.createElement('button');
     fishBtn.type = 'button';
     fishBtn.className = 'fish-btn';
-    fishBtn.textContent = '🐟';
+    const fishImg = document.createElement('img');
+    fishImg.src = FISH_IMG;
+    fishImg.alt = 'Tambah poin';
+    fishImg.draggable = false;
+    fishBtn.appendChild(fishImg);
+    const fishLbl = document.createElement('span');
+    fishLbl.textContent = 'IKAN';
+    fishBtn.appendChild(fishLbl);
     fishBtn.title = 'Tambah poin berdasarkan jenis ikan';
     fishBtn.addEventListener('click', () => openFish(team.id));
 
