@@ -12,11 +12,12 @@ body{margin:0;min-height:100vh;background:var(--sheet-bg);font-family:Calibri,'S
 .wrap{max-width:1650px;margin:0 auto;}
 .panel{background:var(--cell-bg);border:1px solid var(--grid);border-radius:4px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
 .tables{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-@media (max-width:820px){.tables{grid-template-columns:1fr;}col.col-rank{width:6%;}col.col-name{width:18%;}col.col-nick{width:21%;}col.col-points{width:29%;}col.col-pay{width:8%;}col.col-join{width:8%;}col.col-hist{width:10%;}}
+@media (max-width:820px){.tables{grid-template-columns:1fr;}col.col-rank{width:6%;}col.col-name{width:18%;}col.col-nick{width:23%;}col.col-points{width:29%;}col.col-pay{width:8%;}col.col-join{width:6%;}col.col-hist{width:10%;}}
 table{width:100%;border-collapse:collapse;table-layout:fixed;background:var(--cell-bg);font-size:var(--fs);}
-col.col-rank{width:5%;} col.col-name{width:20%;} col.col-nick{width:24%;} col.col-points{width:27%;} col.col-pay{width:8%;} col.col-join{width:8%;} col.col-hist{width:8%;}
+col.col-rank{width:5%;} col.col-name{width:20%;} col.col-nick{width:26%;} col.col-points{width:27%;} col.col-pay{width:8%;} col.col-join{width:6%;} col.col-hist{width:8%;}
 th.colhead{background:var(--head-bg);border:1px solid #1A5C37;font-weight:800;font-size:1em;color:#fff;text-align:center;padding:.6em 2px;}
 th.colhead.poin{background:var(--head-bg);color:#fff;}
+thead th:nth-child(6){font-size:.68em;padding:.9em 0;white-space:nowrap;overflow:hidden;letter-spacing:0;}
 thead th:last-child{font-size:.72em;padding:.85em 0;white-space:nowrap;overflow:hidden;letter-spacing:0;}
 tbody td{border:1px solid var(--grid);background:var(--cell-bg);vertical-align:middle;padding:0;height:auto;font-size:1em;}
 td.rank{text-align:center;font-weight:800;font-size:1em;}
@@ -161,7 +162,7 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
   <div class="panel">
     <div class="rules-note">
       <span class="rules-title">Rules</span>
-      <span class="rules-text">Nama ada kata <u>Bin</u> otomatis <u>+1 poin</u> di awal.</span>
+      <span class="rules-text">Nama ada kata <u>Bin</u> otomatis <u>+2 poin</u> di awal.</span>
     </div>
     <div class="top-row">
     <div class="search-bar">
@@ -398,18 +399,18 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
 
   function isBin(team){ return /\bbin\b/i.test(team.name || ''); }
 
-  // Bonus Bin: nama mengandung kata "Bin" otomatis +1 poin di awal.
-  // Kalau kata Bin dihapus dari nama, bonus +1 itu dibatalkan.
+  // Bonus Bin: nama mengandung kata "Bin" otomatis +2 poin di awal.
+  // Kalau kata Bin dihapus dari nama, bonus +2 itu dibatalkan.
   function syncBin(t){
     const has = isBin(t);
     if(has && !t.binBonus){
       t.binBonus = true;
-      t.points += 1;
-      t.history.push({ delta: 1, after: t.points, time: Date.now(), label: 'Bonus Bin' });
+      t.points += 2;
+      t.history.push({ delta: 2, after: t.points, time: Date.now(), label: 'Bonus Bin' });
     } else if(!has && t.binBonus){
       t.binBonus = false;
       const before = t.points;
-      t.points = Math.max(0, before - 1);
+      t.points = Math.max(0, before - 2);
       const d = t.points - before;
       if(d) t.history.push({ delta: d, after: t.points, time: Date.now(), label: 'Bonus Bin dibatalkan' });
     }
