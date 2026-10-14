@@ -14,7 +14,7 @@ body{margin:0;min-height:100vh;background:var(--sheet-bg);font-family:Calibri,'S
 .tables{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 @media (max-width:820px){.tables{grid-template-columns:1fr;}col.col-rank{width:6%;}col.col-name{width:18%;}col.col-nick{width:21%;}col.col-points{width:29%;}col.col-pay{width:8%;}col.col-join{width:8%;}col.col-hist{width:10%;}}
 table{width:100%;border-collapse:collapse;table-layout:fixed;background:var(--cell-bg);font-size:var(--fs);}
-col.col-rank{width:5%;} col.col-name{width:21%;} col.col-nick{width:25%;} col.col-points{width:27%;} col.col-pay{width:7%;} col.col-join{width:7%;} col.col-hist{width:8%;}
+col.col-rank{width:5%;} col.col-name{width:20%;} col.col-nick{width:24%;} col.col-points{width:27%;} col.col-pay{width:8%;} col.col-join{width:8%;} col.col-hist{width:8%;}
 th.colhead{background:var(--head-bg);border:1px solid #1A5C37;font-weight:800;font-size:1em;color:#fff;text-align:center;padding:.6em 2px;}
 th.colhead.poin{background:var(--head-bg);color:#fff;}
 thead th:last-child{font-size:.72em;padding:.85em 0;white-space:nowrap;overflow:hidden;letter-spacing:0;}
@@ -58,7 +58,7 @@ tbody tr.rank-1 td.poin-cell input.points,tbody tr.rank-2 td.poin-cell input.poi
 /* Pembatas tegas antar kolom nama */
 tbody td.name-cell{border-left:3px solid var(--sep);border-right:3px solid var(--sep);}
 thead th:nth-child(2){border-left:3px solid var(--sep);}
-thead th:nth-child(3){border-right:3px solid var(--sep);border-left:3px solid var(--sep);}
+thead th:nth-child(4){border-right:3px solid var(--sep);border-left:3px solid var(--sep);}
 
 input.team-name,input.team-nick{width:100%;border:none;background:transparent;font-family:inherit;font-weight:800;font-size:1em;color:var(--ink);padding:.75em .3em;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 input.team-name::placeholder,input.team-nick::placeholder{color:var(--muted);opacity:.4;font-weight:600;}
@@ -86,12 +86,15 @@ input.points-add:focus{outline:none;border-color:var(--green);border-style:solid
 .fish-ok{background:var(--green);color:#fff;border:none;border-radius:6px;font-size:24px;font-weight:800;padding:12px 28px;cursor:pointer;}
 .hist-fish{display:block;font-size:20px;font-weight:700;color:#E65100;}
 
-.pay-btn{width:1.5em;height:1.7em;max-width:100%;border-radius:3px;cursor:pointer;font-size:1em;font-weight:800;line-height:1;display:inline-flex;align-items:center;justify-content:center;padding:0;font-family:inherit;transition:background .12s,border-color .12s,color .12s,transform .08s;user-select:none;background:#fff;border:1px solid var(--grid);color:#A9A9A9;}
-.pay-btn:active{transform:scale(.9);}
-.pay-btn.paid{background:rgba(19,126,67,.15);border-color:var(--green);color:var(--green);}
-.pay-btn.unpaid{background:rgba(192,57,43,.12);border-color:var(--red);color:var(--red);}
+/* Kolom Pay: isi angka/huruf dulu, lalu KLIK 1x kotaknya untuk tandai sudah bayar (hijau).
+   Klik lagi untuk batal. Klik 2x untuk edit isinya. */
+input.pay-input{width:100%;min-width:0;border-radius:3px;font-family:inherit;font-size:1em;font-weight:900;text-align:center;padding:.4em 0;text-transform:uppercase;transition:background .12s,border-color .12s,color .12s;background:rgba(192,57,43,.12);border:2px solid var(--red);color:var(--red);}
+input.pay-input::placeholder{color:#C98A84;font-weight:700;text-transform:none;}
+input.pay-input:focus{outline:none;box-shadow:0 0 0 2px rgba(16,124,65,.35);}
+input.pay-input.locked{cursor:pointer;caret-color:transparent;}
+input.pay-input.done{background:rgba(19,126,67,.22);border-color:var(--green);color:#0B4A28;}
 
-/* Checklist sudah join */
+/* Checklist absen */
 .join-btn{width:1.5em;height:1.7em;max-width:100%;border-radius:3px;cursor:pointer;font-size:1em;font-weight:900;line-height:1;display:inline-flex;align-items:center;justify-content:center;padding:0;font-family:inherit;transition:background .12s,border-color .12s,color .12s,transform .08s;user-select:none;background:#fff;border:2px solid #9A9A9A;color:transparent;}
 .join-btn:active{transform:scale(.9);}
 .join-btn:hover{border-color:#1565C0;}
@@ -172,13 +175,13 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
     </div>
     <div class="tables">
       <div class="table-scroll"><table>
-        <colgroup><col class="col-rank"><col class="col-name"><col class="col-nick"><col class="col-points"><col class="col-pay"><col class="col-join"><col class="col-hist"></colgroup>
-        <thead><tr><th class="colhead">No</th><th class="colhead">Nama Peserta</th><th class="colhead">Nama Display</th><th class="colhead poin">POIN</th><th class="colhead">Pay</th><th class="colhead">Join</th><th class="colhead">History</th></tr></thead>
+        <colgroup><col class="col-rank"><col class="col-name"><col class="col-pay"><col class="col-nick"><col class="col-points"><col class="col-join"><col class="col-hist"></colgroup>
+        <thead><tr><th class="colhead">No</th><th class="colhead">Nama Peserta</th><th class="colhead">Pay</th><th class="colhead">Nama Display</th><th class="colhead poin">POIN</th><th class="colhead">Absen</th><th class="colhead">History</th></tr></thead>
         <tbody id="tableBodyTop"></tbody>
       </table></div>
       <div class="table-scroll"><table>
-        <colgroup><col class="col-rank"><col class="col-name"><col class="col-nick"><col class="col-points"><col class="col-pay"><col class="col-join"><col class="col-hist"></colgroup>
-        <thead><tr><th class="colhead">No</th><th class="colhead">Nama Peserta</th><th class="colhead">Nama Display</th><th class="colhead poin">POIN</th><th class="colhead">Pay</th><th class="colhead">Join</th><th class="colhead">History</th></tr></thead>
+        <colgroup><col class="col-rank"><col class="col-name"><col class="col-pay"><col class="col-nick"><col class="col-points"><col class="col-join"><col class="col-hist"></colgroup>
+        <thead><tr><th class="colhead">No</th><th class="colhead">Nama Peserta</th><th class="colhead">Pay</th><th class="colhead">Nama Display</th><th class="colhead poin">POIN</th><th class="colhead">Absen</th><th class="colhead">History</th></tr></thead>
         <tbody id="tableBodyBottom"></tbody>
       </table></div>
     </div>
@@ -222,7 +225,7 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
   const nicknamePeserta = ["","","","","","","","","","","","","","","","","","","","Admin"];
   const defaultTeams = [];
   for(let i=1;i<=20;i++){
-    defaultTeams.push({ id:i, name:namaPeserta[i-1], nickname:nicknamePeserta[i-1], points:0, paid:false, joined:false, binBonus:false, slotTime:0, history:[] });
+    defaultTeams.push({ id:i, name:namaPeserta[i-1], nickname:nicknamePeserta[i-1], points:0, pay:'', paid:false, joined:false, binBonus:false, slotTime:0, history:[] });
   }
   let teams = JSON.parse(JSON.stringify(defaultTeams));
 
@@ -574,25 +577,50 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
     pointsWrap.append(pointsInput, addInput, addBtn, fishBtn);
     tdPoints.appendChild(pointsWrap);
 
+    // Kolom Pay: isi angka/huruf dulu. Kalau sudah terisi, KLIK 1x = tandai sudah bayar (hijau),
+    // klik lagi = batal. Klik 2x (double-click) = edit isinya.
     const tdPay = document.createElement('td');
     tdPay.className = 'center';
-    const payBtn = document.createElement('button');
-    payBtn.type = 'button';
-    payBtn.dataset.id = team.id;
-    payBtn.dataset.field = 'pay';
+    const payInput = document.createElement('input');
+    payInput.type = 'text';
+    payInput.className = 'pay-input';
+    payInput.maxLength = 4;
+    payInput.placeholder = '-';
+    payInput.autocomplete = 'off';
+    payInput.value = team.pay || '';
+    payInput.dataset.id = team.id;
+    payInput.dataset.field = 'pay';
     function refreshPay(){
       const t = teams.find(x => x.id === team.id);
-      payBtn.className = 'pay-btn ' + (t.paid ? 'paid' : 'unpaid');
-      payBtn.textContent = t.paid ? '✓' : '✗';
-      payBtn.title = t.paid ? 'Sudah bayar — klik untuk batalkan' : 'Belum bayar — klik untuk tandai lunas';
+      const filled = (t.pay || '') !== '';
+      payInput.readOnly = filled;
+      payInput.classList.toggle('locked', filled);
+      payInput.classList.toggle('done', filled && !!t.paid);
+      payInput.title = !filled ? 'Isi angka/huruf dulu'
+        : (t.paid ? 'Sudah bayar — klik untuk batalkan, klik 2x untuk edit' : 'Klik untuk tandai sudah bayar, klik 2x untuk edit');
     }
     refreshPay();
-    payBtn.addEventListener('click', () => {
+    payInput.addEventListener('input', () => {
+      const t = teams.find(x => x.id === team.id);
+      t.pay = payInput.value.trim();
+      if(!t.pay) t.paid = false;
+      payInput.classList.toggle('done', !!t.paid && t.pay !== '');
+    });
+    payInput.addEventListener('click', () => {
+      if(!payInput.readOnly) return;
       const t = teams.find(x => x.id === team.id);
       t.paid = !t.paid;
       refreshPay();
     });
-    tdPay.appendChild(payBtn);
+    payInput.addEventListener('dblclick', () => {
+      payInput.readOnly = false;
+      payInput.classList.remove('locked');
+      payInput.focus();
+      payInput.select();
+    });
+    payInput.addEventListener('blur', refreshPay);
+    payInput.addEventListener('keydown', (e) => { if(e.key === 'Enter'){ e.preventDefault(); payInput.blur(); } });
+    tdPay.appendChild(payInput);
 
     const tdJoin = document.createElement('td');
     tdJoin.className = 'center';
@@ -604,7 +632,7 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
       const t = teams.find(x => x.id === team.id);
       joinBtn.className = 'join-btn' + (t.joined ? ' joined' : '');
       joinBtn.textContent = '✓';
-      joinBtn.title = t.joined ? 'Sudah join — klik untuk batalkan' : 'Belum join — klik untuk centang';
+      joinBtn.title = t.joined ? 'Sudah absen — klik untuk batalkan' : 'Belum absen — klik untuk centang';
     }
     refreshJoin();
     joinBtn.addEventListener('click', () => {
@@ -630,7 +658,7 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
     histBtn.addEventListener('click', () => openHistory(team.id));
     tdHist.appendChild(histBtn);
 
-    tr.append(tdRank, tdName, tdNick, tdPoints, tdPay, tdJoin, tdHist);
+    tr.append(tdRank, tdName, tdPay, tdNick, tdPoints, tdJoin, tdHist);
     return tr;
   }
 
