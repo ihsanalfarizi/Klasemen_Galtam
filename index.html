@@ -307,6 +307,9 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
 function getPlusDefault() {
   return 1;
 }
+  // Bonus otomatis untuk Tarik Ikan (0 kalau kosong)
+  // Bonus POINT BIN diberikan SEKALI di awal: begitu kolom Pay berisi "bin" (huruf besar/kecil bebas),
+  // poin peserta otomatis bertambah sebesar nilai + POINT BIN. Kalau "bin" dihapus dari Pay, bonus ditarik lagi.
   function syncBin(t){
     const has = /bin/i.test(t.pay || '');
     let delta = 0, label = '';
