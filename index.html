@@ -4,51 +4,66 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Klasemen Galatama</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--grid:#BFBFBF;--ink:#000;--muted:#3D3D3D;--sheet-bg:#F3F3F3;--cell-bg:#fff;--title-bg:#FFFF00;--head-bg:#217346;--poin-head:#C6E0B4;--green:#137E43;--red:#C0392B;--sel-border:#107C41;--sep:#1A5C37;--zero-bg:#FFE3E0;--pos-bg:#9FE3B8;--fs:clamp(12px,1.35vw,24px);}
+:root{
+  --grid:#CFCFCF; --ink:#111; --muted:#4A4A4A;
+  --sheet-bg:#F3F3F3; --cell-bg:#FFFFFF;
+  --stripe:#E6F4EA;          /* baris selang-seling (mint) */
+  --head-bg:#35A04A;         /* header hijau */
+  --server-bg:#58B85F;       /* baris No 20 (server) */
+  --green:#137E43; --red:#C0392B; --sel-border:#107C41; --title-bg:#FFFF00;
+  --fs:clamp(11px,1.2vw,21px);
+}
 *{box-sizing:border-box;}
-body{margin:0;min-height:100vh;background:var(--sheet-bg);font-family:Calibri,'Segoe UI',Arial,sans-serif;color:var(--ink);padding:24px 10px 60px;font-size:19px;font-weight:600;}
-@media (max-width:900px){:root{--fs:clamp(12px,3.2vw,24px);}}
+body{margin:0;min-height:100vh;background:var(--sheet-bg);font-family:'Lexend','Segoe UI',Arial,sans-serif;color:var(--ink);padding:24px 10px 60px;font-size:18px;font-weight:500;}
+@media (max-width:900px){:root{--fs:clamp(10px,2.9vw,21px);}}
 .wrap{max-width:1650px;margin:0 auto;}
 .panel{background:var(--cell-bg);border:1px solid var(--grid);border-radius:4px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
 .tables{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 @media (max-width:820px){.tables{grid-template-columns:1fr;}col.col-rank{width:6%;}col.col-name{width:18%;}col.col-nick{width:25%;}col.col-points{width:29%;}col.col-pay{width:6%;}col.col-join{width:6%;}col.col-hist{width:10%;}}
 table{width:100%;border-collapse:collapse;table-layout:fixed;background:var(--cell-bg);font-size:var(--fs);}
 col.col-rank{width:5%;} col.col-name{width:20%;} col.col-nick{width:28%;} col.col-points{width:27%;} col.col-pay{width:6%;} col.col-join{width:6%;} col.col-hist{width:8%;}
-th.colhead{background:var(--head-bg);border:1px solid #1A5C37;font-weight:800;font-size:1em;color:#fff;text-align:center;padding:.6em 2px;}
-th.colhead.poin{background:var(--head-bg);color:#fff;}
-thead th:nth-child(6){font-size:.68em;padding:.9em 0;white-space:nowrap;overflow:hidden;letter-spacing:0;}
-thead th:last-child{font-size:.72em;padding:.85em 0;white-space:nowrap;overflow:hidden;letter-spacing:0;}
-tbody td{border:1px solid var(--grid);background:var(--cell-bg);vertical-align:middle;padding:0;height:auto;font-size:1em;}
-td.rank{text-align:center;font-weight:800;font-size:1em;}
+
+/* ===== Header ala Google Sheets ===== */
+th.colhead{background:var(--head-bg);border:2px solid #000;font-weight:700;font-size:1em;color:#fff;text-align:center;padding:.7em 2px;letter-spacing:.3px;position:relative;}
+th.filt::after{content:"";display:inline-block;width:.9em;height:.9em;margin-left:.45em;vertical-align:-.1em;opacity:.85;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 6h18M6 12h12M10 18h4' stroke='white' stroke-width='2.6' stroke-linecap='round' fill='none'/></svg>") center/contain no-repeat;}
+thead th:nth-child(3), thead th:nth-child(6), thead th:last-child{font-size:.66em;padding:1em 0;white-space:nowrap;overflow:hidden;}
+
+/* ===== Isi tabel: baris putih & mint selang-seling ===== */
+tbody td{border:2px solid #000;background:var(--cell-bg);vertical-align:middle;padding:0;font-size:1em;}
+tbody tr:nth-child(even) td{background:var(--stripe);}
+td.rank{text-align:center;font-weight:500;font-size:1em;}
 td.center{text-align:center;padding-left:2px;padding-right:2px;}
 td.poin-cell{text-align:center;padding:2px 1px;}
 
-/* Warna baris mengikuti poin: 0 = merah, >0 = hijau */
-tbody tr.zero td.name-cell, tbody td.poin-cell.zero{background:var(--zero-bg);}
-tbody tr.pos td.name-cell, tbody td.poin-cell.pos{background:var(--pos-bg);}
-tbody td.poin-cell.zero input.points{color:#B71C1C;}
-tbody td.poin-cell.pos input.points{color:#06401F;}
+/* Baris Server / Admin (No 20) = hijau solid, tulisan tebal */
+tbody tr.server td{background:var(--server-bg);font-weight:800;}
+tbody tr.server td.rank,tbody tr.server input.team-name,tbody tr.server input.team-nick{font-weight:800;color:#0A2A14;}
 
-/* Belum ada nama peserta + poin 0 = putih */
-tbody tr.zero.blank:not(.search-hit) td.name-cell, tbody tr.zero.blank:not(.search-hit) td.poin-cell{background:var(--cell-bg);}
-tbody tr.zero.blank td.poin-cell input.points{color:#9A9A9A;}
+/* ===== WARNA POIN =====
+   Poin 0  = MERAH
+   Poin > 0 = HIJAU
+   (urutan CSS penting: aturan juara & poin-sama di bawah menimpa hijau) */
+tbody tr.zero:not(.blank) td.name-cell,tbody tr.zero:not(.blank) td.poin-cell{background:#FFCDD2;}
+tbody tr.pos td.name-cell,tbody tr.pos td.poin-cell{background:#A5D6A7;}
 
-/* Warna juara 1-3 */
+/* Juara 1-3 berurutan: EMAS, PERAK, PERUNGGU */
 tbody tr.rank-1 td.name-cell,tbody tr.rank-1 td.poin-cell{background:#FFD54A;}
 tbody tr.rank-2 td.name-cell,tbody tr.rank-2 td.poin-cell{background:#D0D7DE;}
 tbody tr.rank-3 td.name-cell,tbody tr.rank-3 td.poin-cell{background:#E3A66B;}
-tbody tr[class*="rank-"] td.rank{font-weight:900;}
+tbody tr[class*="rank-"] td.rank{font-weight:800;}
 
-/* Poin sama di juara 1-3: tiap kelompok poin sama dapat warna berbeda */
+/* Poin sama di peringkat 1-10 = warna sama (tiap kelompok poin sama punya warna sendiri) */
 tbody tr.tie-0 td.name-cell,tbody tr.tie-0 td.poin-cell{background:#E1BEE7;}
 tbody tr.tie-1 td.name-cell,tbody tr.tie-1 td.poin-cell{background:#B3E5FC;}
 tbody tr.tie-2 td.name-cell,tbody tr.tie-2 td.poin-cell{background:#FFCCBC;}
 tbody tr.tie-3 td.name-cell,tbody tr.tie-3 td.poin-cell{background:#B2DFDB;}
 tbody tr.tie-4 td.name-cell,tbody tr.tie-4 td.poin-cell{background:#F8BBD0;}
-tbody tr[class*="tie-"] td.rank{font-weight:900;}
-tbody tr[class*="tie-"] td.poin-cell input.points{color:#000;}
-tbody tr.rank-1 td.poin-cell input.points,tbody tr.rank-2 td.poin-cell input.points,tbody tr.rank-3 td.poin-cell input.points{color:#000;}
+tbody tr[class*="tie-"] td.rank{font-weight:800;}
 
 /* Kedip saat poin berubah: hijau = naik, biru = turun */
 @keyframes flashUp{0%,65%{background-color:#2ECC71;}}
@@ -61,90 +76,80 @@ tbody tr.flash-down td{animation:flashDown 2.4s ease-out;}
 .adm-head{background:#263238;border-bottom:2px solid var(--grid);}
 .adm-head .modal-title,.adm-head .modal-title small{color:#fff;}
 .adm-total{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 0 6px;padding:14px 18px;background:#E6F5EC;border:2px solid var(--green);border-radius:6px;}
-.adm-total span{font-weight:800;font-size:22px;}
-.adm-total b{font-weight:900;font-size:44px;color:#0B4A28;line-height:1;}
+.adm-total span{font-weight:700;font-size:22px;}
+.adm-total b{font-weight:800;font-size:44px;color:#0B4A28;line-height:1;}
 .adm-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:2px solid #E1E1E1;font-size:20px;}
 .adm-row:last-child{border-bottom:none;}
-.adm-row .adm-name{flex:1;min-width:0;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.adm-row .adm-nums{color:var(--muted);font-weight:700;font-size:18px;white-space:nowrap;}
-.adm-row .adm-sub{min-width:56px;text-align:right;font-weight:900;font-size:24px;}
+.adm-row .adm-name{flex:1;min-width:0;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.adm-row .adm-nums{color:var(--muted);font-weight:500;font-size:18px;white-space:nowrap;}
+.adm-row .adm-sub{min-width:56px;text-align:right;font-weight:800;font-size:24px;}
 .adm-row.none .adm-sub,.adm-row.none .adm-nums{color:#9A9A9A;}
 .adm-hint{text-align:center;color:var(--muted);font-size:16px;padding:10px 0 0;}
 
-/* Pembatas tegas antar kolom nama */
-tbody td.name-cell{border-left:3px solid var(--sep);border-right:3px solid var(--sep);}
-thead th:nth-child(2){border-left:3px solid var(--sep);}
-thead th:nth-child(4){border-right:3px solid var(--sep);border-left:3px solid var(--sep);}
-
-input.team-name,input.team-nick{width:100%;border:none;background:transparent;font-family:inherit;font-weight:800;font-size:1em;color:var(--ink);padding:.75em .3em;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-input.team-name::placeholder,input.team-nick::placeholder{color:var(--muted);opacity:.4;font-weight:600;}
+/* Input nama */
+input.team-name,input.team-nick{width:100%;border:none;background:transparent;font-family:inherit;font-weight:500;font-size:1em;color:var(--ink);padding:.75em .3em;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+input.team-name{text-transform:uppercase;}
+input.team-name::placeholder,input.team-nick::placeholder{color:var(--muted);opacity:.4;font-weight:400;text-transform:none;}
 input.team-name:focus,input.team-nick:focus{outline:none;background:#fff;box-shadow:inset 0 0 0 2px var(--sel-border);text-align:left;}
 
 .points-wrap{display:flex;align-items:center;justify-content:center;gap:2px;flex-wrap:nowrap;}
-input.points{width:1.9em;min-width:0;border:2px solid rgba(0,0,0,.28);border-radius:6px;background:rgba(255,255,255,.75);font-family:inherit;font-weight:900;font-size:1.5em;color:var(--ink);text-align:center;padding:0 .25em;line-height:1.3;height:1.3em;flex:none;cursor:default;margin-right:.3em;overflow:visible;-webkit-appearance:none;appearance:none;-webkit-text-fill-color:currentColor;opacity:1;}
+input.points{width:1.9em;min-width:0;border:2px solid rgba(0,0,0,.22);border-radius:6px;background:rgba(255,255,255,.8);font-family:inherit;font-weight:700;font-size:1.4em;color:var(--ink);text-align:center;padding:0 .25em;line-height:1.3;height:1.3em;flex:none;cursor:default;margin-right:.3em;overflow:visible;-webkit-appearance:none;appearance:none;-webkit-text-fill-color:currentColor;opacity:1;}
 input.points:focus{outline:none;}
-input.points-add{width:2.4em;min-width:2.4em;flex:none;border:1px dashed #9A9A9A;background:rgba(255,255,255,.7);font-family:inherit;font-weight:700;font-size:.8em;color:var(--muted);text-align:center;padding:.55em 0;border-radius:2px;}
+input.points-add{width:2.4em;min-width:2.4em;flex:none;border:1px dashed #9A9A9A;background:rgba(255,255,255,.75);font-family:inherit;font-weight:500;font-size:.8em;color:var(--muted);text-align:center;padding:.55em 0;border-radius:2px;}
 input.points-add::placeholder{color:#8A8A8A;}
 input.points-add:focus{outline:none;border-color:var(--green);border-style:solid;color:var(--ink);background:#fff;}
-.add-btn{width:1.3em;min-width:1.3em;height:1.8em;flex:none;border-radius:2px;border:1px solid var(--green);background:rgba(255,255,255,.7);color:var(--green);font-family:inherit;font-weight:700;font-size:1em;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;}
+.add-btn{width:1.3em;min-width:1.3em;height:1.8em;flex:none;border-radius:2px;border:1px solid var(--green);background:rgba(255,255,255,.75);color:var(--green);font-family:inherit;font-weight:700;font-size:1em;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;}
 .add-btn:hover{background:#fff;} .add-btn:active{transform:scale(.9);}
 
-/* Tombol pilih jenis ikan (gambar saja, tanpa tulisan) */
+/* Tombol pilih jenis ikan */
 .fish-btn{height:2.9em;flex:none;border-radius:4px;border:2px solid #1565C0;background:#E3F2FD;cursor:pointer;padding:0 .2em;display:flex;align-items:center;justify-content:center;gap:.1em;font-family:inherit;white-space:nowrap;}
 .fish-btn img{height:2.6em;width:auto;display:block;pointer-events:none;}
 .fish-btn:hover{background:#BBDEFB;border-color:#0D47A1;}
 .fish-btn:active{transform:scale(.93);}
-.fish-opt{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:2px solid #E1E1E1;font-size:24px;font-weight:800;cursor:pointer;}
+.fish-opt{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:2px solid #E1E1E1;font-size:24px;font-weight:700;cursor:pointer;}
 .fish-opt input{width:30px;height:30px;accent-color:var(--green);}
-.fish-opt .fp{margin-left:auto;color:var(--green);font-weight:900;}
+.fish-opt .fp{margin-left:auto;color:var(--green);font-weight:800;}
 .fish-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 22px;border-top:2px solid var(--grid);}
 .fish-foot b{font-size:30px;color:#0B4A28;}
-.fish-ok{background:var(--green);color:#fff;border:none;border-radius:6px;font-size:24px;font-weight:800;padding:12px 28px;cursor:pointer;}
-.hist-fish{display:block;font-size:20px;font-weight:700;color:#E65100;}
+.fish-ok{background:var(--green);color:#fff;border:none;border-radius:6px;font-family:inherit;font-size:24px;font-weight:700;padding:12px 28px;cursor:pointer;}
+.hist-fish{display:block;font-size:20px;font-weight:600;color:#E65100;}
 
-/* Kolom Pay: isi angka/huruf dulu, lalu KLIK 1x kotaknya untuk tandai sudah bayar (hijau).
-   Klik lagi untuk batal. Klik 2x untuk edit isinya. */
-input.pay-input{width:100%;min-width:0;border-radius:8px;font-family:inherit;font-size:.8em;font-weight:900;text-align:center;padding:.4em 0;text-transform:uppercase;transition:background .15s,border-color .15s,color .15s,box-shadow .15s;background:#FFE9E7;border:2px solid #E5484D;color:#C62828;box-shadow:none;}
-input.pay-input::placeholder{color:#C98A84;font-weight:700;text-transform:none;}
+/* Kolom Pay: isi dulu, KLIK 1x = tandai sudah bayar (hijau), klik lagi = batal, klik 2x = edit */
+input.pay-input{width:100%;min-width:0;border-radius:8px;font-family:inherit;font-size:.8em;font-weight:800;text-align:center;padding:.4em 0;text-transform:uppercase;transition:background .15s,border-color .15s,color .15s,box-shadow .15s;background:#FFE9E7;border:2px solid #E5484D;color:#C62828;box-shadow:none;}
+input.pay-input::placeholder{color:#C98A84;font-weight:600;text-transform:none;}
 input.pay-input:focus{outline:none;box-shadow:0 0 0 2px rgba(16,124,65,.35);}
 input.pay-input.locked{cursor:pointer;caret-color:transparent;}
 input.pay-input.done{background:#1FA35C;border-color:#137E43;color:#fff;box-shadow:0 2px 6px rgba(19,126,67,.45);}
 
 /* Checklist absen */
-.join-btn{width:1.5em;height:1.7em;max-width:100%;border-radius:3px;cursor:pointer;font-size:1em;font-weight:900;line-height:1;display:inline-flex;align-items:center;justify-content:center;padding:0;font-family:inherit;transition:background .12s,border-color .12s,color .12s,transform .08s;user-select:none;background:#fff;border:2px solid #9A9A9A;color:transparent;}
+.join-btn{width:1.5em;height:1.7em;max-width:100%;border-radius:3px;cursor:pointer;font-size:1em;font-weight:800;line-height:1;display:inline-flex;align-items:center;justify-content:center;padding:0;font-family:inherit;transition:background .12s,border-color .12s,color .12s,transform .08s;user-select:none;background:#fff;border:2px solid #9A9A9A;color:transparent;}
 .join-btn:active{transform:scale(.9);}
 .join-btn:hover{border-color:#137E43;}
 .join-btn.joined{background:#1FA35C;border-color:#137E43;color:#fff;}
 
 .hist-btn{display:inline-flex;align-items:center;justify-content:center;width:1.5em;height:1.5em;max-width:100%;border-radius:2px;border:1px solid var(--grid);background:#fff;color:var(--muted);font-size:1em;cursor:pointer;position:relative;transition:border-color .12s;}
 .hist-btn:hover{border-color:var(--sel-border);} .hist-btn:active{transform:scale(.92);}
-.hist-btn .hist-count{position:absolute;top:-.4em;right:-.4em;min-width:14px;height:14px;padding:0 3px;border-radius:7px;background:var(--red);color:#fff;font-size:max(9px,.5em);font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1;}
+.hist-btn .hist-count{position:absolute;top:-.4em;right:-.4em;min-width:14px;height:14px;padding:0 3px;border-radius:7px;background:var(--red);color:#fff;font-size:max(9px,.5em);font-weight:600;display:flex;align-items:center;justify-content:center;line-height:1;}
 
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;padding:16px;}
 .modal-overlay.open{display:flex;}
 .modal-box{width:100%;max-width:680px;max-height:90vh;display:flex;flex-direction:column;background:#fff;border:2px solid var(--grid);border-radius:8px;box-shadow:0 16px 48px rgba(0,0,0,.35);overflow:hidden;}
-.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px;background:var(--title-bg);border-bottom:2px solid var(--grid);}
-.modal-title{font-weight:800;font-size:30px;}
-.modal-title small{display:block;font-weight:700;font-size:22px;color:var(--muted);margin-top:4px;}
+.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px;background:var(--head-bg);color:#fff;border-bottom:2px solid var(--grid);}
+.modal-title{font-weight:700;font-size:28px;}
+.modal-title small{display:block;font-weight:500;font-size:20px;opacity:.9;margin-top:4px;}
 .modal-close{width:48px;height:48px;border-radius:4px;border:2px solid var(--grid);background:#fff;color:var(--muted);font-size:24px;line-height:1;cursor:pointer;flex:none;}
 .modal-close:hover{border-color:var(--red);color:var(--red);}
 .modal-body{overflow-y:auto;padding:10px 22px 22px;}
-.hist-empty{text-align:center;color:var(--muted);font-size:24px;padding:40px 10px;}
+.hist-empty{text-align:center;color:var(--muted);font-size:22px;padding:40px 10px;}
 .hist-list{list-style:none;margin:0;padding:0;}
 .hist-item{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 0;border-bottom:2px solid #E1E1E1;}
 .hist-item:last-child{border-bottom:none;}
-.hist-delta{font-weight:800;font-size:38px;min-width:100px;}
+.hist-delta{font-weight:800;font-size:36px;min-width:100px;}
 .hist-delta.pos{color:var(--green);} .hist-delta.neg{color:var(--red);}
 .hist-meta{flex:1;text-align:right;}
-.hist-time{font-size:24px;font-weight:700;color:var(--muted);display:block;}
-.hist-after{font-size:26px;font-weight:800;display:block;margin-bottom:2px;}
-@media (max-width:520px){.modal-title{font-size:24px;}.modal-title small{font-size:18px;}.hist-delta{font-size:30px;min-width:76px;}.hist-after{font-size:20px;}.hist-time{font-size:18px;}.hist-fish{font-size:16px;}.fish-opt{font-size:22px;}}
-
-.rules-note{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:8px 14px;background:#E6F5EC;border:2px solid var(--green);border-left:6px solid var(--green);border-radius:6px;white-space:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;}
-.rules-title{flex:none;background:var(--green);color:#fff;font-size:15px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:3px 12px;border-radius:4px;}
-.rules-text{flex:none;font-size:25px;line-height:1.3;font-weight:900;}
-.rules-text u{text-decoration-thickness:2px;text-underline-offset:3px;color:#0B4A28;}
-@media (max-width:820px){.rules-text{font-size:20px;}.rules-title{font-size:18px;}}
+.hist-time{font-size:22px;font-weight:500;color:var(--muted);display:block;}
+.hist-after{font-size:24px;font-weight:700;display:block;margin-bottom:2px;}
+@media (max-width:520px){.modal-title{font-size:22px;}.modal-title small{font-size:16px;}.hist-delta{font-size:28px;min-width:76px;}.hist-after{font-size:19px;}.hist-time{font-size:16px;}.hist-fish{font-size:15px;}.fish-opt{font-size:20px;}}
 
 .top-row{display:flex;align-items:stretch;gap:10px;margin:0 0 8px;}
 .top-row .search-bar{flex:1;min-width:0;margin:0;}
@@ -152,12 +157,12 @@ input.pay-input.done{background:#1FA35C;border-color:#137E43;color:#fff;box-shad
 .search-bar:focus-within{border-color:var(--sel-border);}
 .search-bar.active{border-color:#107C41;background:#E2EFDA;}
 .search-icon{font-size:calc(var(--fs)*.95);flex:none;}
-#searchInput{flex:1;min-width:0;border:none;background:transparent;font-family:inherit;font-weight:700;font-size:calc(var(--fs)*.95);color:var(--ink);padding:.25em 2px;}
+#searchInput{flex:1;min-width:0;border:none;background:transparent;font-family:inherit;font-weight:500;font-size:calc(var(--fs)*.95);color:var(--ink);padding:.25em 2px;}
 #searchInput:focus{outline:none;}
-.search-key{flex:none;font-size:calc(var(--fs)*.65);font-weight:800;color:var(--muted);border:1px solid var(--grid);border-radius:3px;padding:.1em .45em;background:#F3F3F3;white-space:nowrap;}
+.search-key{flex:none;font-size:calc(var(--fs)*.65);font-weight:600;color:var(--muted);border:1px solid var(--grid);border-radius:3px;padding:.1em .45em;background:#F3F3F3;white-space:nowrap;}
 #searchClear{display:none;flex:none;width:1.5em;height:1.5em;border-radius:3px;border:1px solid var(--grid);background:#fff;color:var(--muted);font-size:calc(var(--fs)*.75);cursor:pointer;line-height:1;}
 #searchClear:hover{border-color:var(--red);color:var(--red);}
-#searchCount{display:none;flex:none;font-weight:800;font-size:calc(var(--fs)*.7);padding:.15em .55em;border-radius:999px;color:#fff;background:var(--green);white-space:nowrap;}
+#searchCount{display:none;flex:none;font-weight:600;font-size:calc(var(--fs)*.7);padding:.15em .55em;border-radius:999px;color:#fff;background:var(--green);white-space:nowrap;}
 #searchCount.none{background:var(--red);}
 body.searching tbody tr{opacity:.3;transition:opacity .15s;}
 body.searching tbody tr.search-hit{opacity:1;}
@@ -165,12 +170,14 @@ tbody tr.search-hit td,tbody tr.search-hit td.name-cell,tbody tr.search-hit td.p
 tbody tr.search-hit td:first-child{box-shadow:inset 4px 0 0 #E65100,inset 0 4px 0 #E65100,inset 0 -4px 0 #E65100;}
 tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 0 #E65100,inset 0 -4px 0 #E65100;}
 
-/* Sisa Slot (diperbesar) */
-.slot-badge{flex:none;display:inline-flex;align-items:center;align-self:center;gap:.6em;font-weight:900;font-size:calc(var(--fs)*1);white-space:nowrap;padding:.2em .4em .2em .9em;border-radius:999px;background:#E2EFDA;border:2px solid var(--head-bg);color:var(--ink);}
-.slot-badge .slot-num{display:inline-block;min-width:1.8em;padding:.05em .5em;border-radius:999px;background:var(--green);color:#fff;text-align:center;font-weight:900;font-size:1.4em;line-height:1.3;}
+/* Sisa Slot */
+.slot-badge{flex:none;display:inline-flex;align-items:center;align-self:center;gap:.6em;font-weight:700;font-size:calc(var(--fs)*1);white-space:nowrap;padding:.2em .4em .2em .9em;border-radius:999px;background:var(--stripe);border:2px solid var(--head-bg);color:var(--ink);}
+.slot-badge .slot-num{display:inline-block;min-width:1.8em;padding:.05em .5em;border-radius:999px;background:var(--green);color:#fff;text-align:center;font-weight:800;font-size:1.4em;line-height:1.3;}
 .slot-badge.full .slot-num{background:var(--red);}
+.plus-set input{width:3em;border:2px solid var(--head-bg);border-radius:6px;background:#fff;font-family:inherit;font-weight:800;font-size:1.2em;text-align:center;color:var(--ink);padding:.05em .1em;}
+.plus-set input:focus{outline:none;border-color:var(--sel-border);}
 
-.copyright{margin-top:14px;text-align:center;font-weight:800;font-size:calc(var(--fs)*.9);color:var(--muted);letter-spacing:.3px;cursor:pointer;}
+.copyright{margin-top:14px;text-align:center;font-weight:1000;font-size:calc(var(--fs)*.9);color:var(--muted);letter-spacing:.3px;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -184,17 +191,18 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
       <span id="searchCount"></span>
       <button type="button" id="searchClear" title="Hapus pencarian (Esc)">✕</button>
     </div>
+    <div class="slot-badge plus-set" title="Nilai poin yang ditambah saat tombol + ditekan (kalau kolom ± kosong)"><span>+ BIN</span><input type="number" id="plusDefault" value="1" step="1"></div>
     <div class="slot-badge" id="slotInfo" title="Jumlah Nama Peserta yang masih kosong"><span class="slot-label">Sisa Slot</span><span class="slot-num" id="slotLeft">0</span></div>
     </div>
     <div class="tables">
       <div class="table-scroll"><table>
         <colgroup><col class="col-rank"><col class="col-name"><col class="col-pay"><col class="col-nick"><col class="col-points"><col class="col-join"><col class="col-hist"></colgroup>
-        <thead><tr><th class="colhead">No</th><th class="colhead">Nama Peserta</th><th class="colhead">Pay</th><th class="colhead">Nama Display</th><th class="colhead poin">POIN</th><th class="colhead">Absen</th><th class="colhead">History</th></tr></thead>
+        <thead><tr><th class="colhead">NO</th><th class="colhead">NAMA</th><th class="colhead">Pay</th><th class="colhead ">DISPLAY AKUN</th><th class="colhead ">POINT</th><th class="colhead">Absen</th><th class="colhead">History</th></tr></thead>
         <tbody id="tableBodyTop"></tbody>
       </table></div>
       <div class="table-scroll"><table>
         <colgroup><col class="col-rank"><col class="col-name"><col class="col-pay"><col class="col-nick"><col class="col-points"><col class="col-join"><col class="col-hist"></colgroup>
-        <thead><tr><th class="colhead">No</th><th class="colhead">Nama Peserta</th><th class="colhead">Pay</th><th class="colhead">Nama Display</th><th class="colhead poin">POIN</th><th class="colhead">Absen</th><th class="colhead">History</th></tr></thead>
+        <thead><tr><th class="colhead">NO</th><th class="colhead ">NAMA</th><th class="colhead">Pay</th><th class="colhead ">DISPLAY AKUN</th><th class="colhead ">POINT</th><th class="colhead">Absen</th><th class="colhead">History</th></tr></thead>
         <tbody id="tableBodyBottom"></tbody>
       </table></div>
     </div>
@@ -263,6 +271,13 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
   const histModalClose = document.getElementById('histModalClose');
   const searchInput = document.getElementById('searchInput');
   const searchClear = document.getElementById('searchClear');
+
+  // Nilai tombol + (diatur di bagian atas, default 1)
+  const plusDefaultInput = document.getElementById('plusDefault');
+  function getPlusDefault(){
+    const v = parseInt(plusDefaultInput.value, 10);
+    return isNaN(v) || v === 0 ? 1 : v;
+  }
 
   // Lama kedip warna saat poin berubah (ms) - samakan dengan durasi animasi di CSS
   const FLASH_MS = 2400;
@@ -439,35 +454,42 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
     return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
   }
 
-  // Warna baris: poin 0 = merah, di atas 0 = hijau
+  // Penanda poin: zero (0) = MERAH, pos (>0) = HIJAU (warnanya diatur di CSS)
   function applyScoreColor(tr, td, points){
     const tm = teams.find(x => x.id === Number(tr.dataset.id));
     tr.classList.toggle('blank', !tm || (tm.name || '').trim() === '');
     tr.classList.toggle('zero', points <= 0);
     tr.classList.toggle('pos', points > 0);
-    td.classList.toggle('zero', points <= 0);
-    td.classList.toggle('pos', points > 0);
   }
 
-  // Poin sama di juara 1-3: tiap kelompok poin sama dapat warna berbeda
+  // Poin sama di peringkat 1-10: tiap kelompok poin yang sama dapat 1 warna yang sama
   let tieColor = {};
+  let compRank = {};   // peringkat kompetisi: poin sama = peringkat sama (untuk medali)
   const TIE_COLORS = 5;
+  const TIE_RANK_LIMIT = 10;
   function computeTies(sorted){
+    compRank = {};
+    sorted.forEach(t => {
+      compRank[t.id] = 1 + sorted.filter(o => o.points > t.points).length;
+    });
     const count = {};
-    sorted.slice(0,3).forEach(t => { if(t.points > 0) count[t.points] = (count[t.points] || 0) + 1; });
+    sorted.slice(0, TIE_RANK_LIMIT).forEach(t => { if(t.points > 0) count[t.points] = (count[t.points] || 0) + 1; });
     tieColor = {};
     let idx = 0;
-    sorted.slice(0,3).forEach(t => {
+    sorted.slice(0, TIE_RANK_LIMIT).forEach(t => {
       if(t.points > 0 && count[t.points] > 1 && tieColor[t.points] === undefined){
         tieColor[t.points] = idx++ % TIE_COLORS;
       }
     });
   }
 
-  // Warna juara 1-3 (hanya jika poin > 0); kalau poin sama (juara 1-3) pakai warna kelompok
+  // Warna peringkat:
+  //  - poin sama di peringkat 1-10  -> warna kelompok (sama untuk yang poinnya sama)
+  //  - juara 1-3 (poin > 0, tidak seri) -> emas, perak, perunggu
+  //  - lainnya -> hijau (poin > 0) / merah (poin 0) lewat applyScoreColor
   function applyRankColor(tr, rank, points){
     tr.classList.remove('rank-1','rank-2','rank-3','tie-0','tie-1','tie-2','tie-3','tie-4');
-    if(points > 0 && rank <= 3 && tieColor[points] !== undefined){
+    if(points > 0 && rank <= TIE_RANK_LIMIT && tieColor[points] !== undefined){
       tr.classList.add('tie-' + tieColor[points]);
     } else if(points > 0 && rank <= 3){
       tr.classList.add('rank-' + rank);
@@ -502,10 +524,16 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
   function buildRow(team, rank){
     const tr = document.createElement('tr');
     tr.dataset.id = team.id;
+    if(team.id === 20) tr.classList.add('server');   // baris server = hijau solid
 
     const tdRank = document.createElement('td');
     tdRank.className = 'rank';
-    tdRank.textContent = rank;
+    // Juara 1-3 (poin > 0): nomor diganti medali emas, perak, perunggu
+    const MEDALS = { 1:'🥇', 2:'🥈', 3:'🥉' };
+    // Kalau poin sama (perebutan juara 1-3), semua yang seri dapat medali yang sama,
+    // termasuk yang urutannya sudah di bawah nomor 3.
+    const medalRank = compRank[team.id] || rank;
+    tdRank.textContent = (team.points > 0 && MEDALS[medalRank]) ? MEDALS[medalRank] : rank;
 
     const tdName = document.createElement('td');
     tdName.className = 'name-cell';
@@ -566,8 +594,10 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
     addInput.dataset.field = 'add';
     addInput.addEventListener('focus', (e) => e.target.select());
 
-    function commitAdd(){
-      const delta = parseInt(addInput.value, 10);
+    function commitAdd(useDefault){
+      let delta = parseInt(addInput.value, 10);
+      // Tombol + : kalau kolom ± kosong, pakai nilai yang di-setting di bagian atas
+      if(isNaN(delta) && useDefault === true) delta = getPlusDefault();
       if(isNaN(delta) || delta === 0){ addInput.value = ''; return; }
       const t = teams.find(x => x.id === team.id);
       const newPoints = Math.max(0, t.points + delta);
@@ -590,8 +620,8 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
     addBtn.type = 'button';
     addBtn.className = 'add-btn';
     addBtn.textContent = '+';
-    addBtn.title = 'Tambahkan poin';
-    addBtn.addEventListener('click', commitAdd);
+    addBtn.title = 'Tambahkan poin (kolom ± kosong = pakai nilai Tombol + di atas)';
+    addBtn.addEventListener('click', () => commitAdd(true));
 
     const fishBtn = document.createElement('button');
     fishBtn.type = 'button';
