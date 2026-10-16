@@ -188,6 +188,10 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
 .usn-set input{width:7em;font-size:1em;font-weight:700;padding:.3em .6em;}
 .usn-set input::placeholder{color:#8A8A8A;font-weight:500;}
 .plus-set input:focus{outline:none;border-color:var(--sel-border);}
+.map-set input{text-transform:uppercase;}
+.map-set input::placeholder{text-transform:none;}
+.map-clear{flex:none;width:1.6em;height:1.6em;border-radius:50%;border:1px solid var(--grid);background:#fff;color:var(--muted);font-size:.9em;cursor:pointer;line-height:1;padding:0;display:none;}
+.map-clear:hover{border-color:var(--red);color:var(--red);}
 
 .medal{display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;border-radius:50%;font-weight:800;font-size:.95em;color:#222;border:2px solid rgba(0,0,0,.35);box-shadow:inset 0 -2px 0 rgba(0,0,0,.18);}
 .medal.m1{background:linear-gradient(#FFE27A,#F5B700);}
@@ -211,7 +215,8 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
     </div>
     <div class="slot-badge plus-set" title="Nilai poin awal otomatis untuk peserta yang kolom Pay-nya berisi BIN, juga nilai bawaan tombol + (kolom ± kosong)"><span>+ POINT BIN</span><input type="number" id="plusDefault" value="0" step="1"></div>
     <div class="slot-badge plus-set usn-set" title="Kolom ADD USN, diisi manual"><span>ADD USN</span><input type="text" id="addUsn" placeholder="isi USN..." autocomplete="off" spellcheck="false"></div>
-    <div class="slot-badge plus-set usn-set" title="Kolom MAP, diisi manual"><span>MAP</span><input type="text" id="addMap" placeholder="isi map..." autocomplete="off" spellcheck="false"></div>
+    <div class="slot-badge plus-set usn-set map-set" title="Kolom MAP: klik untuk pilih dari daftar, atau ketik sendiri"><span>MAP</span><input type="text" id="addMap" list="mapList" placeholder="pilih / ketik map..." autocomplete="off" spellcheck="false"><button type="button" class="map-clear" id="mapClear" title="Kosongkan MAP">✕</button></div>
+    <datalist id="mapList"></datalist>
     <div class="slot-badge" id="slotInfo" title="Jumlah Nama Peserta yang masih kosong"><span class="slot-label">Sisa Slot</span><span class="slot-num" id="slotLeft">0</span></div>
     </div>
     <div class="tables">
@@ -299,13 +304,9 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
 
   // Nilai tombol + (diatur di bagian atas, default 1 kalau kosong/0)
   const plusDefaultInput = document.getElementById('plusDefault');
-  function getPlusDefault(){
-    const v = parseInt(plusDefaultInput.value, 10);
-    return isNaN(v) || v === 0 ? 1 : v;
-  }
-  // Bonus otomatis untuk Tarik Ikan (0 kalau kosong)
-  // Bonus POINT BIN diberikan SEKALI di awal: begitu kolom Pay berisi "bin" (huruf besar/kecil bebas),
-  // poin peserta otomatis bertambah sebesar nilai + POINT BIN. Kalau "bin" dihapus dari Pay, bonus ditarik lagi.
+function getPlusDefault() {
+  return 1;
+}
   function syncBin(t){
     const has = /bin/i.test(t.pay || '');
     let delta = 0, label = '';
@@ -817,17 +818,57 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
       const cs = getComputedStyle(input);
       m.style.font = cs.font;
       m.style.letterSpacing = cs.letterSpacing;
+      m.style.textTransform = cs.textTransform;
       m.textContent = input.value || input.placeholder;
       const fs = parseFloat(cs.fontSize);
       const extra = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth) + 6;
       input.style.width = Math.min(Math.max(m.offsetWidth + extra, fs * 7), fs * 20) + 'px';
     }
     input.addEventListener('input', fit);
+    input.addEventListener('change', fit);
+    input.fitSize = fit;
     fit();
     if(document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
   }
   autoGrow(document.getElementById('addUsn'));
-  autoGrow(document.getElementById('addMap'));
+
+  // ===== Kolom MAP: pilih dari daftar ATAU ketik sendiri =====
+  // Edit daftar pilihan map di sini (tambah/hapus sesuka hati):
+  const MAP_OPTIONS = ['Sisyphus Isle', 'Planet Observatory', 'Megalodon', 'Crater', 'Glacial'];
+  const mapInput = document.getElementById('addMap');
+  const mapClear = document.getElementById('mapClear');
+  const mapList = document.getElementById('mapList');
+  MAP_OPTIONS.forEach(name => {
+    const o = document.createElement('option');
+    o.value = name.toUpperCase();
+    mapList.appendChild(o);
+  });
+  autoGrow(mapInput);
+
+  // Saat diklik/fokus: kosongkan sementara supaya SEMUA pilihan muncul (isi lama dipulihkan kalau tidak jadi memilih)
+  let mapPrev = '';
+  mapInput.addEventListener('focus', () => {
+    mapPrev = mapInput.value;
+    if(mapInput.value){ mapInput.value = ''; mapInput.fitSize(); }
+  });
+  mapInput.addEventListener('blur', () => {
+    if(mapInput.value.trim() === '' && mapPrev) mapInput.value = mapPrev;
+    mapPrev = '';
+    mapInput.fitSize();
+    mapClear.style.display = mapInput.value ? 'inline-block' : 'none';
+  });
+  mapInput.addEventListener('input', () => {
+    mapPrev = '';   // sudah mengetik/memilih sesuatu, jangan dipulihkan lagi
+    mapClear.style.display = mapInput.value ? 'inline-block' : 'none';
+  });
+  mapInput.addEventListener('keydown', (e) => { if(e.key === 'Enter'){ e.preventDefault(); mapInput.blur(); } });
+  // Tombol ✕ = kosongkan MAP
+  mapClear.addEventListener('mousedown', (e) => e.preventDefault());
+  mapClear.addEventListener('click', () => {
+    mapInput.value = ''; mapPrev = '';
+    mapClear.style.display = 'none';
+    mapInput.fitSize();
+  });
 
   // Skala otomatis: tampilan didesain 1500px lalu diperkecil/diperbesar agar pas selebar layar (tanpa scroll)
   const wrapEl = document.querySelector('.wrap');
