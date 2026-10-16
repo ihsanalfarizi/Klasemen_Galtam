@@ -16,18 +16,17 @@
   --head-bg:#35A04A;         /* header hijau */
   --server-bg:#58B85F;       /* baris No 20 (server) */
   --green:#137E43; --red:#C0392B; --sel-border:#107C41; --title-bg:#FFFF00;
-  --fs:clamp(13px,1.1vw,20px);
+  --fs:clamp(6px,1vw,20px);   /* ukuran tulisan ikut lebar layar, jadi selalu muat tanpa scroll */
   color-scheme:light;
 }
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
 *{box-sizing:border-box;}
 body{margin:0;min-height:100vh;background:var(--sheet-bg);font-family:'Lexend','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;color:var(--ink);padding:24px 10px 60px;font-size:18px;font-weight:500;}
-@media (max-width:900px){:root{--fs:13px;}}
 .wrap{max-width:1650px;margin:0 auto;}
-.panel{background:var(--cell-bg);border:1px solid var(--grid);border-radius:4px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);overflow-x:auto;-webkit-overflow-scrolling:touch;}
-.tables{display:grid;grid-template-columns:repeat(2,minmax(560px,1fr));gap:12px;}
-.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;min-width:0;}
-table{width:100%;min-width:560px;border-collapse:collapse;table-layout:fixed;background:var(--cell-bg);font-size:var(--fs);}
+.panel{background:var(--cell-bg);border:1px solid var(--grid);border-radius:4px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.tables{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.table-scroll{min-width:0;}
+table{width:100%;border-collapse:collapse;table-layout:fixed;background:var(--cell-bg);font-size:var(--fs);}
 col.col-rank{width:6%;} col.col-name{width:21%;} col.col-pay{width:6%;} col.col-nick{width:25%;} col.col-points{width:28%;} col.col-join{width:7%;} col.col-hist{width:7%;}
 
 /* ===== Header ala Google Sheets ===== */
@@ -155,7 +154,7 @@ input.pay-input.done{background:#1FA35C;border-color:#137E43;color:#fff;box-shad
 .hist-after{font-size:24px;font-weight:700;display:block;margin-bottom:2px;}
 @media (max-width:520px){.modal-title{font-size:22px;}.modal-title small{font-size:16px;}.hist-delta{font-size:28px;min-width:76px;}.hist-after{font-size:19px;}.hist-time{font-size:16px;}.hist-fish{font-size:15px;}.fish-opt{font-size:20px;}}
 
-.top-row{display:flex;align-items:stretch;gap:10px;margin:0 0 8px;min-width:1132px;}
+.top-row{display:flex;align-items:stretch;gap:10px;margin:0 0 8px;}
 .top-row .search-bar{flex:1;min-width:0;margin:0;}
 .search-bar{display:flex;align-items:center;gap:6px;margin:0 0 8px;padding:2px 8px;background:#fff;border:2px solid var(--head-bg);border-radius:6px;}
 .search-bar:focus-within{border-color:var(--sel-border);}
