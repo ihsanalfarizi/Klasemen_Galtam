@@ -33,7 +33,8 @@ col.col-rank{width:6%;} col.col-name{width:20%;} col.col-pay{width:7%;} col.col-
 th.colhead{background:var(--head-bg);border:2px solid #000;font-weight:700;font-size:1em;color:#fff;text-align:center;padding:.7em 2px;letter-spacing:.3px;position:relative;}
 th.filt::after{content:"";display:inline-block;width:.9em;height:.9em;margin-left:.45em;vertical-align:-.1em;opacity:.85;
   background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 6h18M6 12h12M10 18h4' stroke='white' stroke-width='2.6' stroke-linecap='round' fill='none'/></svg>") center/contain no-repeat;}
-thead th:nth-child(3), thead th:nth-child(6), thead th:last-child{font-size:.55em;padding:1.1em 0;white-space:nowrap;overflow:hidden;}
+thead th:nth-child(6), thead th:last-child{font-size:.55em;padding:1.1em 0;white-space:nowrap;overflow:hidden;}
+thead th:nth-child(3){font-size:1.05em;font-weight:800;padding:.7em 0;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-shadow:0 1px 0 rgba(0,0,0,.35);}
 
 /* ===== Isi tabel: baris putih & mint selang-seling ===== */
 tbody td{border:2px solid #000;background:var(--cell-bg);vertical-align:middle;padding:0;font-size:1em;}
@@ -106,6 +107,11 @@ input.points{width:1.9em;min-width:0;border:2px solid rgba(0,0,0,.6);border-radi
 input.points:focus{outline:none;}
 input.points-add{width:3em;min-width:3em;flex:none;border:1px dashed #9A9A9A;background:rgba(255,255,255,.75);font-family:inherit;font-weight:500;font-size:.8em;color:var(--muted);text-align:center;padding:.55em 0;border-radius:2px;}
 .points-wrap>*{flex-shrink:0;}
+/* Angka POINT diperbesar, ikon poin ikan & kolom ± dikecilkan agar tetap muat */
+input.points{width:1.8em;font-size:1.6em;height:1.25em;line-height:1.2;padding:0 .1em;margin-right:.3em;}
+input.points-add{width:2.6em;min-width:2.6em;}
+.fish-btn{height:1.7em;padding:0 .15em;}
+.fish-btn img{height:1.3em;}
 input.points-add::placeholder{color:#8A8A8A;}
 input.points-add:focus{outline:none;border-color:var(--green);border-style:solid;color:var(--ink);background:#fff;}
 .add-btn{width:1.15em;min-width:1.15em;height:1.5em;flex:none;border-radius:2px;border:1px solid var(--green);background:rgba(255,255,255,.75);color:var(--green);font-family:inherit;font-weight:700;font-size:1em;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;}
@@ -124,8 +130,9 @@ input.points-add:focus{outline:none;border-color:var(--green);border-style:solid
 .fish-ok{background:var(--green);color:#fff;border:none;border-radius:6px;font-family:inherit;font-size:24px;font-weight:700;padding:12px 28px;cursor:pointer;}
 .hist-fish{display:block;font-size:20px;font-weight:600;color:#E65100;}
 
-/* Kolom Pay: isi dulu, KLIK 1x = tandai sudah bayar (hijau), klik lagi = batal, klik 2x = edit */
-input.pay-input{width:100%;min-width:0;border-radius:8px;font-family:inherit;font-size:.9em;font-weight:800;text-align:center;padding:.4em 0;text-transform:uppercase;transition:background .15s,border-color .15s,color .15s,box-shadow .15s;background:#FFE9E7;border:2px solid #E5484D;color:#C62828;box-shadow:none;}
+/* Kolom Pay: isi dulu, KLIK 1x = tandai sudah bayar (hijau), klik lagi = batal, klik 2x = edit
+   Tulisan dibesarkan (1.4em); lebar kolom tetap. Tulisan panjang mengecil otomatis lewat fitPay() */
+input.pay-input{width:100%;min-width:0;border-radius:8px;font-family:inherit;font-size:1.15em;font-weight:800;text-align:center;padding:.3em 0;text-transform:uppercase;transition:background .15s,border-color .15s,color .15s,box-shadow .15s;background:#FFE9E7;border:2px solid #E5484D;color:#C62828;box-shadow:none;}
 input.pay-input::placeholder{color:#C98A84;font-weight:600;text-transform:none;}
 input.pay-input:focus{outline:none;box-shadow:0 0 0 2px rgba(16,124,65,.35);}
 input.pay-input.locked{cursor:pointer;caret-color:transparent;}
@@ -139,6 +146,10 @@ input.pay-input.done{background:#1FA35C;border-color:#137E43;color:#fff;box-shad
 
 .hist-btn{display:inline-flex;align-items:center;justify-content:center;width:1.5em;height:1.5em;max-width:100%;border-radius:2px;border:1px solid var(--grid);background:#fff;color:var(--muted);font-size:1em;cursor:pointer;position:relative;transition:border-color .12s;}
 .hist-btn:hover{border-color:var(--sel-border);} .hist-btn:active{transform:scale(.92);}
+/* Absen & History: isi dibuat penuh selebar kolom supaya jelas terlihat */
+td.center .join-btn{width:100%;height:2.1em;font-size:1.3em;border-radius:4px;}
+td.center .hist-btn{width:100%;height:2.1em;border-radius:4px;}
+td.center .hist-btn .ico{width:1.4em;height:1.4em;}
 .hist-btn .hist-count{position:absolute;top:-.4em;right:-.4em;min-width:14px;height:14px;padding:0 3px;border-radius:7px;background:var(--red);color:#fff;font-size:max(9px,.5em);font-weight:600;display:flex;align-items:center;justify-content:center;line-height:1;}
 
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;padding:16px;}
@@ -181,13 +192,16 @@ tbody tr.search-hit td:first-child{box-shadow:inset 4px 0 0 #E65100,inset 0 4px 
 tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 0 #E65100,inset 0 -4px 0 #E65100;}
 
 /* Sisa Slot */
-.slot-badge{flex:none;display:inline-flex;align-items:center;align-self:center;gap:.6em;font-weight:700;font-size:calc(var(--fs)*1.12);white-space:nowrap;padding:.25em .45em .25em .95em;border-radius:999px;background:var(--stripe);border:2px solid var(--head-bg);color:var(--ink);}
+.slot-badge{flex:none;display:inline-flex;align-items:center;align-self:center;gap:.4em;font-weight:700;font-size:calc(var(--fs)*.92);white-space:nowrap;padding:.2em .3em .2em .7em;border-radius:999px;background:var(--stripe);border:2px solid var(--head-bg);color:var(--ink);}
 .slot-badge .slot-num{display:inline-block;min-width:1.8em;padding:.05em .5em;border-radius:999px;background:var(--green);color:#fff;text-align:center;font-weight:800;font-size:1.4em;line-height:1.3;}
 .slot-badge.full .slot-num{background:var(--red);}
 .plus-set input{width:3em;border:2px solid var(--head-bg);border-radius:6px;background:#fff;font-family:inherit;font-weight:800;font-size:1.2em;text-align:center;color:var(--ink);padding:.05em .1em;}
-.usn-set input{width:7em;font-size:1em;font-weight:700;padding:.3em .6em;}
+.usn-set input{width:5.2em;font-size:1em;font-weight:700;padding:.2em .4em;}
 .usn-set input::placeholder{color:#8A8A8A;font-weight:500;}
 .plus-set input:focus{outline:none;border-color:var(--sel-border);}
+.slot-badge.start-set{font-size:calc(var(--fs)*.92);gap:.4em;padding:.2em .3em .2em .7em;}
+.usn-set.start-set input{width:5.6em;font-size:1em;font-weight:700;font-family:inherit;padding:.2em .3em;cursor:pointer;}
+.usn-set.start-set input::-webkit-calendar-picker-indicator{display:none;}
 .map-set input{text-transform:uppercase;}
 .map-set input::placeholder{text-transform:none;}
 .map-clear{flex:none;width:1.6em;height:1.6em;border-radius:50%;border:1px solid var(--grid);background:#fff;color:var(--muted);font-size:.9em;cursor:pointer;line-height:1;padding:0;display:none;}
@@ -222,7 +236,7 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
     <div class="top-row">
     <div class="search-bar">
       <span class="search-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="#35A04A" stroke-width="2.6" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></span>
-      <input type="text" id="searchInput" placeholder="Cari Nama Display, Enter untuk tambah poin ikan..." autocomplete="off">
+      <input type="text" id="searchInput" placeholder="Cari Display, Enter = poin ikan..." autocomplete="off">
       <span class="search-key" title="Pintasan keyboard">Ctrl+F</span>
       <span id="searchCount"></span>
       <button type="button" id="searchClear" title="Hapus pencarian (Esc)">✕</button>
@@ -230,6 +244,7 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
     <div class="slot-badge plus-set" title="Nilai poin awal otomatis untuk peserta yang kolom Pay-nya berisi BIN, juga nilai bawaan tombol + (kolom ± kosong)"><span>+ POINT BIN</span><input type="number" id="plusDefault" value="0" step="1"></div>
     <div class="slot-badge plus-set usn-set" title="Kolom ADD USN, diisi manual"><span>ADD USN</span><input type="text" id="addUsn" placeholder="isi USN..." autocomplete="off" spellcheck="false"></div>
     <div class="slot-badge plus-set usn-set map-set" title="Kolom MAP: klik untuk pilih dari daftar, atau ketik sendiri"><span>MAP</span><input type="text" id="addMap" list="mapList" placeholder="pilih / ketik map..." autocomplete="off" spellcheck="false"><button type="button" class="map-clear" id="mapClear" title="Kosongkan MAP">✕</button></div>
+    <div class="slot-badge plus-set usn-set start-set" title="Jam start lomba: klik untuk pilih jam"><span>JAM START</span><input type="time" id="jamStart"></div>
     <datalist id="mapList"></datalist>
     <div class="slot-badge" id="slotInfo" title="Jumlah Nama Peserta yang masih kosong"><span class="slot-label">Sisa Slot</span><span class="slot-num" id="slotLeft">0</span></div>
     </div>
@@ -534,11 +549,22 @@ function getPlusDefault() {
   const TIE_RANK_LIMIT = 10;
   function computeTies(sorted){
     compRank = {};
+    // Fase poin awal / BIN: selama semua poin yang ada HANYA berasal dari bonus BIN,
+    // nomor juara & warna berurutan 1, 2, 3, ... (tidak boleh 1 semua).
+    // Begitu ada poin dari luar BIN (ikan / manual), poin sama baru boleh berperingkat sama.
+    const binPhase = sorted.every(t => t.points === 0 || t.points === t.binGiven);
+    if(binPhase){
+      sorted.forEach((t, i) => { compRank[t.id] = i + 1; });
+      tieColor = {};
+      return;
+    }
     sorted.forEach(t => {
       compRank[t.id] = 1 + sorted.filter(o => o.points > t.points).length;
     });
     const count = {};
-    sorted.slice(0, TIE_RANK_LIMIT).forEach(t => { if(t.points > 0) count[t.points] = (count[t.points] || 0) + 1; });
+    // Hanya poin sama yang memperebutkan juara 1, 2, atau 3 (peringkat kompetisi <= 3) yang diberi warna kelompok.
+    // Poin sama di peringkat 4 ke bawah tidak diwarnai khusus (tetap hijau biasa).
+    sorted.slice(0, TIE_RANK_LIMIT).forEach(t => { if(t.points > 0 && compRank[t.id] <= 3) count[t.points] = (count[t.points] || 0) + 1; });
     tieColor = {};
     let idx = 0;
     sorted.slice(0, TIE_RANK_LIMIT).forEach(t => {
@@ -724,14 +750,21 @@ function getPlusDefault() {
     payInput.value = team.pay || '';
     payInput.dataset.id = team.id;
     payInput.dataset.field = 'pay';
+    // Ukuran tulisan Pay menyesuaikan panjang isi: pendek = besar, panjang = mengecil agar muat di kolom
+    function fitPay(){
+      const n = payInput.value.length;
+      payInput.style.fontSize = n <= 3 ? '' : n === 4 ? '.9em' : '.72em';
+    }
     function refreshPay(){
       const t = teams.find(x => x.id === team.id);
       const filled = (t.pay || '') !== '';
       payInput.readOnly = filled;
+      if(filled) payInput.value = t.pay.slice(0, 3);   // tampil 3 karakter pertama saja (isi lengkap tetap tersimpan)
       payInput.classList.toggle('locked', filled);
       payInput.classList.toggle('done', filled && !!t.paid);
       payInput.title = !filled ? 'Isi angka/huruf dulu'
-        : (t.paid ? 'Sudah bayar — klik untuk batalkan, klik 2x untuk edit' : 'Klik untuk tandai sudah bayar, klik 2x untuk edit');
+        : ('Isi: ' + t.pay + ' — ' + (t.paid ? 'sudah bayar, klik untuk batalkan, klik 2x untuk edit' : 'klik untuk tandai sudah bayar, klik 2x untuk edit'));
+      fitPay();
     }
     refreshPay();
     payInput.addEventListener('input', () => {
@@ -739,6 +772,7 @@ function getPlusDefault() {
       t.pay = payInput.value.trim();
       if(!t.pay) t.paid = false;
       payInput.classList.toggle('done', !!t.paid && t.pay !== '');
+      fitPay();
     });
     payInput.addEventListener('click', () => {
       if(!payInput.readOnly) return;
@@ -748,6 +782,8 @@ function getPlusDefault() {
     });
     payInput.addEventListener('dblclick', () => {
       payInput.readOnly = false;
+      payInput.value = teams.find(x => x.id === team.id).pay;   // saat edit tampil isi lengkap
+      fitPay();
       payInput.classList.remove('locked');
       payInput.focus();
       payInput.select();
@@ -839,7 +875,7 @@ function getPlusDefault() {
       m.textContent = input.value || input.placeholder;
       const fs = parseFloat(cs.fontSize);
       const extra = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth) + 6;
-      input.style.width = Math.min(Math.max(m.offsetWidth + extra, fs * 7), fs * 20) + 'px';
+      input.style.width = Math.min(Math.max(m.offsetWidth + extra, fs * 5.2), fs * 14) + 'px';
     }
     input.addEventListener('input', fit);
     input.addEventListener('change', fit);
@@ -885,6 +921,12 @@ function getPlusDefault() {
     mapInput.value = ''; mapPrev = '';
     mapClear.style.display = 'none';
     mapInput.fitSize();
+  });
+
+  // JAM START: klik kotaknya langsung membuka pemilih jam (kalau browser mendukung)
+  const jamStart = document.getElementById('jamStart');
+  jamStart.addEventListener('click', () => {
+    try { if(jamStart.showPicker) jamStart.showPicker(); } catch(e) {}
   });
 
   // Skala otomatis: tampilan didesain 1400px lalu diperkecil/diperbesar agar pas selebar layar (tanpa scroll)
