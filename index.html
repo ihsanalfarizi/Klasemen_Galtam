@@ -228,6 +228,51 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
 #fishModal .fish-foot{padding:10px 18px;}
 #fishModal .fish-foot b{font-size:25px;}
 #fishModal .fish-ok{font-size:20px;padding:10px 24px;}
+
+/* ===== Bar atas: 2 baris & diperbesar ===== */
+.top-row{flex-wrap:wrap;gap:5px 8px;margin:0 0 5px;}
+
+/* Baris 1: kolom cari memanjang penuh */
+.top-row .search-bar{flex:1 1 100%;padding:0 10px;}
+.search-icon{font-size:calc(var(--fs)*.9);}
+#searchInput{font-size:calc(var(--fs)*.85);padding:.15em 4px;}
+.search-key{font-size:calc(var(--fs)*.65);}
+#searchCount{font-size:calc(var(--fs)*.7);}
+#searchClear{font-size:calc(var(--fs)*.75);}
+
+/* Baris 2: POINT BIN, ADD USN, MAP, JAM START, Sisa Slot */
+.top-row .slot-badge{font-size:calc(var(--fs)*1.25);padding:.3em .4em .3em .8em;gap:.5em;}
+.top-row .slot-badge.plus-set{flex:0 0 auto;}
+/* ADD USN & MAP: ikut melebar mengikuti panjang tulisan (lebar diatur script autoGrow) */
+.top-row .slot-badge.usn-set:not(.start-set){flex:1 1 auto;min-width:0;}
+.top-row .slot-badge.plus-set input{flex:0 1 auto;min-width:0;font-size:1em !important;padding:.3em .4em;}
+.top-row .slot-badge.usn-set:not(.start-set) input{flex:1 1 auto;}
+/* POINT BIN & JAM START: kolom isian diperkecil */
+#plusDefault{width:1.9em !important;flex:none !important;padding:.3em .1em !important;}
+#jamStart{width:3.7em !important;flex:none !important;padding:.3em .1em !important;font-size:.9em !important;}
+.top-row .slot-badge .slot-num{font-size:1.5em;}
+#slotInfo{flex:0 0 auto;}
+
+/* Footer "Created By": jarak atas tipis, tulisan diperbesar */
+.copyright{margin-top:2px;font-size:calc(var(--fs)*1.6);line-height:1.2;}
+
+/* Tombol ✕ di kolom MAP dihapus (disembunyikan) */
+.map-clear{display:none !important;}
+
+/* Baris badge: selalu sejajar 1 baris, USN & MAP mengecil kalau tidak muat */
+.badge-row{display:flex;flex:1 1 100%;flex-wrap:nowrap;align-items:center;gap:8px;min-width:0;}
+.badge-row .slot-badge{min-width:min-content;flex-shrink:0;}
+.badge-row .slot-badge.plus-set:not(.usn-set),.badge-row .start-set,.badge-row #slotInfo{flex:0 0 auto;}
+/* USN & MAP: melebar mengikuti isi (lebar input diatur script), tidak pernah terpotong */
+.badge-row .slot-badge.usn-set:not(.start-set){flex:1 0 auto;}
+.badge-row .slot-badge.usn-set:not(.start-set) input{flex:1 0 auto;}
+.top-row .badge-row .slot-badge{font-size:calc(var(--fs)*1.2);}
+
+/* ===== Search paling atas: tanpa jarak ===== */
+body{padding-top:0;}
+.panel{padding-top:6px;border-top:none;border-radius:0 0 4px 4px;}
+.top-row{margin-top:0;}
+.top-row .search-bar{margin-top:0;border-top-width:2px;}
 </style>
 </head>
 <body>
@@ -241,12 +286,14 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
       <span id="searchCount"></span>
       <button type="button" id="searchClear" title="Hapus pencarian (Esc)">✕</button>
     </div>
+    <div class="badge-row">
     <div class="slot-badge plus-set" title="Nilai poin awal otomatis untuk peserta yang kolom Pay-nya berisi BIN, juga nilai bawaan tombol + (kolom ± kosong)"><span>+ POINT BIN</span><input type="number" id="plusDefault" value="0" step="1"></div>
     <div class="slot-badge plus-set usn-set" title="Kolom ADD USN, diisi manual"><span>ADD USN</span><input type="text" id="addUsn" placeholder="isi USN..." autocomplete="off" spellcheck="false"></div>
     <div class="slot-badge plus-set usn-set map-set" title="Kolom MAP: klik untuk pilih dari daftar, atau ketik sendiri"><span>MAP</span><input type="text" id="addMap" list="mapList" placeholder="pilih / ketik map..." autocomplete="off" spellcheck="false"><button type="button" class="map-clear" id="mapClear" title="Kosongkan MAP">✕</button></div>
     <div class="slot-badge plus-set usn-set start-set" title="Jam start lomba: klik untuk pilih jam"><span>JAM START</span><input type="time" id="jamStart"></div>
     <datalist id="mapList"></datalist>
     <div class="slot-badge" id="slotInfo" title="Jumlah Nama Peserta yang masih kosong"><span class="slot-label">Sisa Slot</span><span class="slot-num" id="slotLeft">0</span></div>
+    </div>
     </div>
     <div class="tables">
       <div class="table-scroll"><table>
@@ -261,7 +308,7 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
       </table></div>
     </div>
   </div>
-  <div class="copyright">© <span class="adm-trigger" id="admTrigger">Copyright</span> by Aaronnn</div>
+  <div class="copyright"><span class="adm-trigger" id="admTrigger">Created</span> By Aaronnn</div>
 </div>
 
 <div class="modal-overlay" id="histModal">
@@ -875,7 +922,7 @@ function getPlusDefault() {
       m.textContent = input.value || input.placeholder;
       const fs = parseFloat(cs.fontSize);
       const extra = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth) + 6;
-      input.style.width = Math.min(Math.max(m.offsetWidth + extra, fs * 5.2), fs * 14) + 'px';
+      input.style.width = Math.min(Math.max(m.offsetWidth + extra, fs * 5.2), fs * 30) + 'px';
     }
     input.addEventListener('input', fit);
     input.addEventListener('change', fit);
