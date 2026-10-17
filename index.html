@@ -22,23 +22,23 @@
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
 *{box-sizing:border-box;}
 body{margin:0;min-height:100vh;background:var(--sheet-bg);font-family:'Lexend','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;color:var(--ink);padding:24px 10px 60px;font-size:18px;font-weight:500;overflow-x:hidden;}
-.wrap{width:1500px;margin:0 auto;}   /* lebar desain tetap; di-zoom otomatis oleh script supaya pas di layar apa pun */
+.wrap{width:1400px;margin:0 auto;}   /* lebar desain tetap; di-zoom otomatis oleh script supaya pas di layar apa pun */
 .panel{background:var(--cell-bg);border:1px solid var(--grid);border-radius:4px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.08);}
 .tables{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
 .table-scroll{min-width:0;}
 table{width:100%;border-collapse:collapse;table-layout:fixed;background:var(--cell-bg);font-size:var(--fs);}
-col.col-rank{width:6%;} col.col-name{width:23%;} col.col-pay{width:6%;} col.col-nick{width:31%;} col.col-points{width:21%;} col.col-join{width:6%;} col.col-hist{width:7%;}
+col.col-rank{width:6%;} col.col-name{width:20%;} col.col-pay{width:7%;} col.col-nick{width:34%;} col.col-points{width:22%;} col.col-join{width:5%;} col.col-hist{width:5%;}
 
 /* ===== Header ala Google Sheets ===== */
 th.colhead{background:var(--head-bg);border:2px solid #000;font-weight:700;font-size:1em;color:#fff;text-align:center;padding:.7em 2px;letter-spacing:.3px;position:relative;}
 th.filt::after{content:"";display:inline-block;width:.9em;height:.9em;margin-left:.45em;vertical-align:-.1em;opacity:.85;
   background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M3 6h18M6 12h12M10 18h4' stroke='white' stroke-width='2.6' stroke-linecap='round' fill='none'/></svg>") center/contain no-repeat;}
-thead th:nth-child(3), thead th:nth-child(6), thead th:last-child{font-size:.7em;padding:.9em 0;white-space:nowrap;overflow:hidden;}
+thead th:nth-child(3), thead th:nth-child(6), thead th:last-child{font-size:.55em;padding:1.1em 0;white-space:nowrap;overflow:hidden;}
 
 /* ===== Isi tabel: baris putih & mint selang-seling ===== */
 tbody td{border:2px solid #000;background:var(--cell-bg);vertical-align:middle;padding:0;font-size:1em;}
 tbody tr:nth-child(even) td{background:var(--stripe);}
-td.rank{text-align:center;font-weight:700;font-size:1em;}
+td.rank{text-align:center;font-weight:800;font-size:1.1em;}
 td.center{text-align:center;padding-left:2px;padding-right:2px;}
 td.poin-cell{text-align:center;padding:2px 1px;}
 
@@ -67,11 +67,11 @@ tbody tr.rank-3 td.name-cell,tbody tr.rank-3 td.poin-cell{background:#E58E3A;}
 tbody tr[class*="rank-"] td.rank{font-weight:800;}
 
 /* Poin sama di peringkat 1-10 = warna sama (tiap kelompok poin sama punya warna sendiri) */
-tbody tr.tie-0 td.name-cell,tbody tr.tie-0 td.poin-cell{background:#b1aab3;}
-tbody tr.tie-1 td.name-cell,tbody tr.tie-1 td.poin-cell{background:#5CC6F5;}
-tbody tr.tie-2 td.name-cell,tbody tr.tie-2 td.poin-cell{background:#FF9E7A;}
-tbody tr.tie-3 td.name-cell,tbody tr.tie-3 td.poin-cell{background:#4DC9B8;}
-tbody tr.tie-4 td.name-cell,tbody tr.tie-4 td.poin-cell{background:#F77FA9;}
+tbody tr.tie-0 td.name-cell,tbody tr.tie-0 td.poin-cell{background:#B388FF;}   /* ungu */
+tbody tr.tie-1 td.name-cell,tbody tr.tie-1 td.poin-cell{background:#26C6DA;}   /* cyan */
+tbody tr.tie-2 td.name-cell,tbody tr.tie-2 td.poin-cell{background:#F06292;}   /* pink tua */
+tbody tr.tie-3 td.name-cell,tbody tr.tie-3 td.poin-cell{background:#A1887F;}   /* coklat */
+tbody tr.tie-4 td.name-cell,tbody tr.tie-4 td.poin-cell{background:#5C7CFA;}   /* biru tua */
 tbody tr[class*="tie-"] td.rank{font-weight:800;}
 
 /* Kedip saat poin berubah: hijau = naik, biru = turun */
@@ -96,13 +96,13 @@ tbody tr.flash-down td{animation:flashDown 2.4s ease-out;}
 .adm-hint{text-align:center;color:var(--muted);font-size:16px;padding:10px 0 0;}
 
 /* Input nama */
-input.team-name,input.team-nick{width:100%;border:none;background:transparent;font-family:inherit;font-weight:700;font-size:1em;color:var(--ink);padding:.75em .3em;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+input.team-name,input.team-nick{width:100%;border:none;background:transparent;font-family:inherit;font-weight:700;font-size:1.08em;color:var(--ink);padding:.75em .3em;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 input.team-name{text-transform:uppercase;}
 input.team-name::placeholder,input.team-nick::placeholder{color:var(--muted);opacity:.6;font-weight:400;text-transform:none;}
 input.team-name:focus,input.team-nick:focus{outline:none;background:#fff;box-shadow:inset 0 0 0 2px var(--sel-border);text-align:left;}
 
 .points-wrap{display:flex;align-items:center;justify-content:center;gap:2px;flex-wrap:nowrap;}
-input.points{width:1.9em;min-width:0;border:2px solid rgba(0,0,0,.6);border-radius:6px;background:#fff;font-family:inherit;font-weight:700;font-size:1.15em;color:var(--ink);text-align:center;padding:0 .2em;line-height:1.3;height:1.3em;flex:none;cursor:default;margin-right:.35em;overflow:visible;-webkit-appearance:none;appearance:none;-webkit-text-fill-color:currentColor;opacity:1;}
+input.points{width:1.9em;min-width:0;border:2px solid rgba(0,0,0,.6);border-radius:6px;background:#fff;font-family:inherit;font-weight:800;font-size:1.2em;color:var(--ink);text-align:center;padding:0 .2em;line-height:1.3;height:1.3em;flex:none;cursor:default;margin-right:.35em;overflow:visible;-webkit-appearance:none;appearance:none;-webkit-text-fill-color:currentColor;opacity:1;}
 input.points:focus{outline:none;}
 input.points-add{width:3em;min-width:3em;flex:none;border:1px dashed #9A9A9A;background:rgba(255,255,255,.75);font-family:inherit;font-weight:500;font-size:.8em;color:var(--muted);text-align:center;padding:.55em 0;border-radius:2px;}
 .points-wrap>*{flex-shrink:0;}
@@ -125,7 +125,7 @@ input.points-add:focus{outline:none;border-color:var(--green);border-style:solid
 .hist-fish{display:block;font-size:20px;font-weight:600;color:#E65100;}
 
 /* Kolom Pay: isi dulu, KLIK 1x = tandai sudah bayar (hijau), klik lagi = batal, klik 2x = edit */
-input.pay-input{width:100%;min-width:0;border-radius:8px;font-family:inherit;font-size:.8em;font-weight:800;text-align:center;padding:.4em 0;text-transform:uppercase;transition:background .15s,border-color .15s,color .15s,box-shadow .15s;background:#FFE9E7;border:2px solid #E5484D;color:#C62828;box-shadow:none;}
+input.pay-input{width:100%;min-width:0;border-radius:8px;font-family:inherit;font-size:.9em;font-weight:800;text-align:center;padding:.4em 0;text-transform:uppercase;transition:background .15s,border-color .15s,color .15s,box-shadow .15s;background:#FFE9E7;border:2px solid #E5484D;color:#C62828;box-shadow:none;}
 input.pay-input::placeholder{color:#C98A84;font-weight:600;text-transform:none;}
 input.pay-input:focus{outline:none;box-shadow:0 0 0 2px rgba(16,124,65,.35);}
 input.pay-input.locked{cursor:pointer;caret-color:transparent;}
@@ -200,6 +200,20 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
 .ico{width:1.05em;height:1.05em;display:block;}
 .copyright{margin-top:14px;text-align:center;font-weight:800;font-size:calc(var(--fs)*.9);color:#D32F2F;letter-spacing:.3px;}
 .adm-trigger{cursor:pointer;}
+
+/* ===== Popup Tarik Ikan: lebih kecil & centang di kanan ===== */
+#fishModal .modal-box{max-width:460px;}
+#fishModal .modal-head{padding:12px 18px;}
+#fishModal .modal-title{font-size:23px;}
+#fishModal .modal-title small{font-size:16px;margin-top:3px;}
+#fishModal .modal-close{width:38px;height:38px;font-size:20px;}
+#fishModal .modal-body{padding:4px 18px 8px;}
+#fishModal .fish-opt{font-size:20px;gap:10px;padding:9px 0;}
+#fishModal .fish-opt .fp{margin-left:auto;order:2;font-size:19px;}
+#fishModal .fish-opt input{order:3;width:27px;height:27px;margin:0 0 0 12px;}
+#fishModal .fish-foot{padding:10px 18px;}
+#fishModal .fish-foot b{font-size:25px;}
+#fishModal .fish-ok{font-size:20px;padding:10px 24px;}
 </style>
 </head>
 <body>
@@ -837,7 +851,7 @@ function getPlusDefault() {
 
   // ===== Kolom MAP: pilih dari daftar ATAU ketik sendiri =====
   // Edit daftar pilihan map di sini (tambah/hapus sesuka hati):
-  const MAP_OPTIONS = ['Sisyphus Isle', 'Planet Observatory', 'Megalodon', 'Crater', 'Glacial'];
+  const MAP_OPTIONS = ['Sisyphus Isle', 'Planet Observatory', 'Megalodon', 'Creater', 'Glacial',];
   const mapInput = document.getElementById('addMap');
   const mapClear = document.getElementById('mapClear');
   const mapList = document.getElementById('mapList');
@@ -873,9 +887,9 @@ function getPlusDefault() {
     mapInput.fitSize();
   });
 
-  // Skala otomatis: tampilan didesain 1500px lalu diperkecil/diperbesar agar pas selebar layar (tanpa scroll)
+  // Skala otomatis: tampilan didesain 1400px lalu diperkecil/diperbesar agar pas selebar layar (tanpa scroll)
   const wrapEl = document.querySelector('.wrap');
-  const DESIGN_W = 1500;
+  const DESIGN_W = 1400;
   function fitToScreen(){
     const avail = document.documentElement.clientWidth - 20;
     const scale = Math.max(0.2, Math.min(avail / DESIGN_W, 1.6));
