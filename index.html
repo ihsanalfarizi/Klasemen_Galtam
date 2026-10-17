@@ -67,7 +67,7 @@ tbody tr.rank-2 td.name-cell,tbody tr.rank-2 td.poin-cell{background:#B8C4CC;}
 tbody tr.rank-3 td.name-cell,tbody tr.rank-3 td.poin-cell{background:#E58E3A;}
 tbody tr[class*="rank-"] td.rank{font-weight:800;}
 
-/* Poin sama yang memperebutkan juara 1-3 = warna sama (tiap kelompok poin sama punya warna sendiri) */
+/* Poin sama di peringkat 1-10 = warna sama (tiap kelompok poin sama punya warna sendiri) */
 tbody tr.tie-0 td.name-cell,tbody tr.tie-0 td.poin-cell{background:#B388FF;}   /* ungu */
 tbody tr.tie-1 td.name-cell,tbody tr.tie-1 td.poin-cell{background:#26C6DA;}   /* cyan */
 tbody tr.tie-2 td.name-cell,tbody tr.tie-2 td.poin-cell{background:#F06292;}   /* pink tua */
@@ -273,6 +273,25 @@ body{padding-top:0;}
 .panel{padding-top:6px;border-top:none;border-radius:0 0 4px 4px;}
 .top-row{margin-top:0;}
 .top-row .search-bar{margin-top:0;border-top-width:2px;}
+
+/* ===== TANDA MERAH: klik kolom NO untuk mewarnai baris merah / membatalkan ===== */
+td.rank.red-toggle{cursor:pointer;user-select:none;-webkit-user-select:none;}
+tbody tr.red td,
+tbody tr.red td.name-cell,
+tbody tr.red td.poin-cell{background:#E53935;color:#fff;}
+tbody tr.red input.team-name,
+tbody tr.red input.team-nick{color:#fff;}
+tbody tr.red input.team-name::placeholder,
+tbody tr.red input.team-nick::placeholder{color:#FFCDD2;}
+tbody tr.red input.team-name:focus,
+tbody tr.red input.team-nick:focus{background:#fff;color:#000;}
+tbody tr.red.search-hit td,
+tbody tr.red.search-hit td.name-cell,
+tbody tr.red.search-hit td.poin-cell{background:#FF8A80;}
+tbody tr.red.search-hit input.team-name,
+tbody tr.red.search-hit input.team-nick{color:#000;}
+.red-note{display:inline-block;margin-left:1.2em;font-size:.55em;font-weight:600;color:#5D4037;letter-spacing:0;vertical-align:middle;background:#FFF59D;border:2px solid #F9A825;border-left:6px solid #F9A825;border-radius:4px;padding:.3em .8em;box-shadow:0 2px 4px rgba(0,0,0,.15);}
+.red-note b{color:#D32F2F;font-weight:800;margin-right:.3em;}
 </style>
 </head>
 <body>
@@ -308,7 +327,7 @@ body{padding-top:0;}
       </table></div>
     </div>
   </div>
-  <div class="copyright"><span class="adm-trigger" id="admTrigger">Created</span> By Aaronnn</div>
+  <div class="copyright"><span class="adm-trigger" id="admTrigger">Created</span> By Aaronnn<span class="red-note"><b>NOTE:</b> Klik no peserta untuk memerahkan display &nbsp;|&nbsp; Klik Pay yang sudah diisi untuk menandakan sudah dibayar</span></div>
 </div>
 
 <div class="modal-overlay" id="histModal">
@@ -347,7 +366,8 @@ body{padding-top:0;}
   const nicknamePeserta = ["","","","","","","","","","","","","","","","","","","","Admin"];
   const defaultTeams = [];
   for(let i=1;i<=20;i++){
-    defaultTeams.push({ id:i, name:namaPeserta[i-1], nickname:nicknamePeserta[i-1], points:0, binGiven:0, pay:'', paid:false, joined:false, slotTime:0, history:[], flash:null });
+    // red = true -> baris diwarnai merah (hanya warna, tidak mengubah poin/peringkat)
+    defaultTeams.push({ id:i, name:namaPeserta[i-1], nickname:nicknamePeserta[i-1], points:0, binGiven:0, pay:'', paid:false, joined:false, red:false, slotTime:0, history:[], flash:null });
   }
   // No 20 (Admin): otomatis sudah absen dan Pay = D (hijau)
   const adminTeam = defaultTeams.find(t => t.id === 20);
@@ -589,48 +609,47 @@ function getPlusDefault() {
     tr.classList.toggle('pos', points > 0);
   }
 
-  // Warna sama HANYA untuk poin sama yang memperebutkan juara 1-3
-  let tieColor = {};   // per ID peserta
+  // Poin sama di peringkat 1-10: tiap kelompok poin yang sama dapat 1 warna yang sama
+  let tieColor = {};
   let compRank = {};   // peringkat kompetisi: poin sama = peringkat sama (untuk medali)
   const TIE_COLORS = 5;
   const TIE_RANK_LIMIT = 10;
   function computeTies(sorted){
     compRank = {};
-    tieColor = {};
-    // Fase poin awal / BIN: selama semua poin yang ada HANYA dari bonus BIN,
-    // nomor juara berurutan 1, 2, 3, ... (tidak boleh 1 semua) dan tanpa warna seri.
+    // Fase poin awal / BIN: selama semua poin yang ada HANYA berasal dari bonus BIN,
+    // nomor juara & warna berurutan 1, 2, 3, ... (tidak boleh 1 semua).
+    // Begitu ada poin dari luar BIN (ikan / manual), poin sama baru boleh berperingkat sama.
     const binPhase = sorted.every(t => t.points === 0 || t.points === t.binGiven);
     if(binPhase){
       sorted.forEach((t, i) => { compRank[t.id] = i + 1; });
+      tieColor = {};
       return;
     }
-    // Setelah ada poin ikan/manual: poin BIN dihitung sama seperti poin biasa (total poin).
     sorted.forEach(t => {
       compRank[t.id] = 1 + sorted.filter(o => o.points > t.points).length;
     });
-    // Warna sama HANYA untuk poin sama yang memperebutkan juara 1-3.
-    const groups = {};
-    sorted.forEach(t => {
-      if(t.points > 0 && compRank[t.id] <= 3) (groups[t.points] = groups[t.points] || []).push(t.id);
-    });
+    const count = {};
+    // Hanya poin sama yang memperebutkan juara 1, 2, atau 3 (peringkat kompetisi <= 3) yang diberi warna kelompok.
+    // Poin sama di peringkat 4 ke bawah tidak diwarnai khusus (tetap hijau biasa).
+    sorted.slice(0, TIE_RANK_LIMIT).forEach(t => { if(t.points > 0 && compRank[t.id] <= 3) count[t.points] = (count[t.points] || 0) + 1; });
+    tieColor = {};
     let idx = 0;
-    Object.keys(groups).map(Number).sort((a,b) => b - a).forEach(p => {
-      if(groups[p].length > 1){
-        groups[p].forEach(id => { tieColor[id] = idx % TIE_COLORS; });
-        idx++;
+    sorted.slice(0, TIE_RANK_LIMIT).forEach(t => {
+      if(t.points > 0 && count[t.points] > 1 && tieColor[t.points] === undefined){
+        tieColor[t.points] = idx++ % TIE_COLORS;
       }
     });
   }
 
   // Warna peringkat:
-  //  - poin sama yang memperebutkan juara 1-3 -> warna kelompok (sama untuk yang poinnya sama)
+  //  - baris bertanda merah (klik NO) -> merah solid (diatur CSS .red)
+  //  - poin sama di peringkat 1-10  -> warna kelompok (sama untuk yang poinnya sama)
   //  - juara 1-3 (poin > 0, tidak seri) -> emas, perak, perunggu
   //  - lainnya -> hijau (poin > 0) / merah (poin 0) lewat applyScoreColor
   function applyRankColor(tr, rank, points){
     tr.classList.remove('rank-1','rank-2','rank-3','tie-0','tie-1','tie-2','tie-3','tie-4');
-    const id = Number(tr.dataset.id);
-    if(points > 0 && tieColor[id] !== undefined){
-      tr.classList.add('tie-' + tieColor[id]);
+    if(points > 0 && rank <= TIE_RANK_LIMIT && tieColor[points] !== undefined){
+      tr.classList.add('tie-' + tieColor[points]);
     } else if(points > 0 && rank <= 3){
       tr.classList.add('rank-' + rank);
     }
@@ -665,6 +684,7 @@ function getPlusDefault() {
     const tr = document.createElement('tr');
     tr.dataset.id = team.id;
     if(team.id === 20) tr.classList.add('server');   // baris server = hijau solid
+    if(team.red) tr.classList.add('red');            // baris bertanda merah
 
     const tdRank = document.createElement('td');
     tdRank.className = 'rank';
@@ -680,6 +700,18 @@ function getPlusDefault() {
       tdRank.appendChild(m);
     } else {
       tdRank.textContent = rank;
+    }
+
+    // TOMBOL MERAH: klik kolom NO untuk mewarnai baris merah, klik lagi untuk membatalkan
+    // (hanya warna; poin, urutan, dan medali tidak berubah). Baris No 20 (Admin) tidak bisa.
+    if(team.id !== 20){
+      tdRank.classList.add('red-toggle');
+      tdRank.title = 'Klik untuk tandai MERAH / batalkan';
+      tdRank.addEventListener('click', () => {
+        const t = teams.find(x => x.id === team.id);
+        t.red = !t.red;
+        tr.classList.toggle('red', t.red);
+      });
     }
 
     const tdName = document.createElement('td');
