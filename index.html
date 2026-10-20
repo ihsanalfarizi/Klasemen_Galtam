@@ -27,7 +27,7 @@ body{margin:0;min-height:100vh;background:var(--sheet-bg);font-family:'Lexend','
 .tables{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
 .table-scroll{min-width:0;}
 table{width:100%;border-collapse:collapse;table-layout:fixed;background:var(--cell-bg);font-size:var(--fs);}
-col.col-rank{width:6%;} col.col-name{width:20%;} col.col-pay{width:7%;} col.col-nick{width:34%;} col.col-points{width:22%;} col.col-join{width:5%;} col.col-hist{width:5%;}
+col.col-rank{width:6%;} col.col-name{width:23%;} col.col-pay{width:7%;} col.col-nick{width:33%;} col.col-points{width:20%;} col.col-join{width:5%;} col.col-hist{width:5%;}
 
 /* ===== Header ala Google Sheets ===== */
 th.colhead{background:var(--head-bg);border:2px solid #000;font-weight:700;font-size:1em;color:#fff;text-align:center;padding:.7em 2px;letter-spacing:.3px;position:relative;}
@@ -48,9 +48,9 @@ tbody tr.server td{background:var(--server-bg);font-weight:800;}
 tbody tr.server td.rank,tbody tr.server input.team-name,tbody tr.server input.team-nick{font-weight:800;color:#0A2A14;}
 
 /* Baris No 20 (Admin) bukan peserta: warna sendiri (abu-biru gelap), tidak ikut warna poin/juara */
-tbody tr.server.server.server.server td{background:#546E7A;color:#fff;}
-tbody tr.server.server.server.server td.rank,tbody tr.server.server input.team-name,tbody tr.server.server input.team-nick{color:#fff;font-weight:800;}
-tbody tr.server.server input.team-name::placeholder,tbody tr.server.server input.team-nick::placeholder{color:#fff;}
+tbody tr.server.server.server.server td{background:#FFCC80;color:#000;}
+tbody tr.server.server.server.server td.rank,tbody tr.server.server input.team-name,tbody tr.server.server input.team-nick{color:#000;font-weight:800;}
+tbody tr.server.server input.team-name::placeholder,tbody tr.server.server input.team-nick::placeholder{color:#000;}
 tbody tr.server.server.server.server.search-hit td{background:#FFF176;}
 tbody tr.server.server.search-hit input.team-name,tbody tr.server.server.search-hit input.team-nick,tbody tr.server.server.search-hit td.rank{color:var(--ink);}
 
@@ -98,7 +98,7 @@ tbody tr.flash-down td{animation:flashDown 2.4s ease-out;}
 
 /* Input nama */
 input.team-name,input.team-nick{width:100%;border:none;background:transparent;font-family:inherit;font-weight:700;font-size:1.08em;color:var(--ink);padding:.75em .3em;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-input.team-name{text-transform:uppercase;}
+input.team-name{text-transform:none;}
 input.team-name::placeholder,input.team-nick::placeholder{color:var(--muted);opacity:.6;font-weight:400;text-transform:none;}
 input.team-name:focus,input.team-nick:focus{outline:none;background:#fff;box-shadow:inset 0 0 0 2px var(--sel-border);text-align:left;}
 
@@ -292,6 +292,30 @@ tbody tr.red.search-hit input.team-name,
 tbody tr.red.search-hit input.team-nick{color:#000;}
 .red-note{display:inline-block;margin-left:1.2em;font-size:.55em;font-weight:600;color:#5D4037;letter-spacing:0;vertical-align:middle;background:#FFF59D;border:2px solid #F9A825;border-left:6px solid #F9A825;border-radius:4px;padding:.3em .8em;box-shadow:0 2px 4px rgba(0,0,0,.15);}
 .red-note b{color:#D32F2F;font-weight:800;margin-right:.3em;}
+
+/* Kolom ±: panah naik/turun selalu tampil, angka lebih jelas */
+input.points-add{width:3em;min-width:3em;font-size:.95em;font-weight:800;color:var(--ink);padding:.2em 0 .2em .3em;text-align:center;border:1px solid #9A9A9A;background:#fff;-moz-appearance:number-input;}
+input.points-add::-webkit-inner-spin-button,
+input.points-add::-webkit-outer-spin-button{-webkit-appearance:inner-spin-button;opacity:1;height:1.5em;margin-left:1px;cursor:pointer;}
+
+/* Tulisan Admin (baris No 20) = hitam */
+tbody tr.server input.team-name,
+tbody tr.server input.team-nick,
+tbody tr.server.server.server input.team-name,
+tbody tr.server.server.server input.team-nick{color:#000 !important;-webkit-text-fill-color:#000;}
+
+/* Perkecil isi kolom POINT supaya tidak luber ke kolom Absen */
+.points-wrap{gap:1px;max-width:100%;overflow:hidden;}
+input.points{width:1.6em;font-size:1.85em;height:1.2em;margin-right:.15em;}
+input.points-add{width:2.55em;min-width:2.55em;font-size:.8em;padding:.1em 0 .1em .1em;text-align:center;}
+.add-btn{width:1em;min-width:1em;height:1.3em;font-size:.9em;}
+.fish-btn{height:1.4em;padding:0 .1em;border-width:1px;}
+.fish-btn img{height:1.05em;}
+
+/* ===== Footer di dalam panel (tepat di bawah tabel) ===== */
+.panel .copyright{margin-top:5px;padding-top:3px;line-height:1.15;}
+.panel{border-radius:4px;padding-bottom:7px;}
+.copy-mark{display:inline-block;margin-right:.08em;font-weight:800;}
 </style>
 </head>
 <body>
@@ -326,8 +350,8 @@ tbody tr.red.search-hit input.team-nick{color:#000;}
         <tbody id="tableBodyBottom"></tbody>
       </table></div>
     </div>
+    <div class="copyright"><span class="copy-mark" title="Copyright">&copy;</span><span class="adm-trigger" id="admTrigger">Created</span> By Aaronnn<span class="red-note"><b>NOTE:</b> Klik no peserta untuk memerahkan display &nbsp;|&nbsp; Klik Pay yang sudah diisi untuk menandakan sudah dibayar</span></div>
   </div>
-  <div class="copyright"><span class="adm-trigger" id="admTrigger">Created</span> By Aaronnn<span class="red-note"><b>NOTE:</b> Klik no peserta untuk memerahkan display &nbsp;|&nbsp; Klik Pay yang sudah diisi untuk menandakan sudah dibayar</span></div>
 </div>
 
 <div class="modal-overlay" id="histModal">
@@ -771,6 +795,8 @@ function getPlusDefault() {
     addInput.title = 'Ketik angka positif untuk tambah, atau minus (mis. -2) untuk kurangi poin, lalu tekan Enter atau tombol +';
     addInput.dataset.id = team.id;
     addInput.dataset.field = 'add';
+    addInput.value = '1';
+    addInput.min = '-999';
     addInput.addEventListener('focus', (e) => e.target.select());
 
     // useDefault = true  -> kalau kolom ± kosong, pakai nilai + POINT BIN (atau 1)
@@ -778,7 +804,7 @@ function getPlusDefault() {
       let delta = parseInt(addInput.value, 10);
       if(isNaN(delta) && useDefault === true) delta = getPlusDefault();
       if(subtract === true && !isNaN(delta)) delta = -Math.abs(delta);
-      if(isNaN(delta) || delta === 0){ addInput.value = ''; return; }
+      if(isNaN(delta) || delta === 0){ addInput.value = '1'; return; }
       const t = teams.find(x => x.id === team.id);
       const newPoints = Math.max(0, t.points + delta);
       const actualDelta = newPoints - t.points;
@@ -789,12 +815,15 @@ function getPlusDefault() {
       pointsInput.value = t.points;
       applyScoreColor(tr, tdPoints, t.points);
       applyRankColor(tr, rank, t.points);
-      addInput.value = '';
+      addInput.value = '1';
       pendingFocus = { id: team.id, field: 'add' };
       scheduleRender();
     }
     addInput.addEventListener('keydown', (e) => { if(e.key === 'Enter'){ e.preventDefault(); commitAdd(); } });
-    addInput.addEventListener('blur', () => { if(addInput.value !== '') commitAdd(); });
+    addInput.addEventListener('blur', () => {
+      if(addInput.value !== '' && addInput.value !== '1') commitAdd();
+      else addInput.value = '1';
+    });
 
     const addBtn = document.createElement('button');
     addBtn.type = 'button';
