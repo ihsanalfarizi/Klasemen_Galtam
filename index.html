@@ -268,6 +268,7 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
 .badge-row .slot-badge.usn-set:not(.start-set) input{flex:1 0 auto;}
 .top-row .badge-row .slot-badge{font-size:calc(var(--fs)*1.75);}
 .top-row .badge-row .slot-badge > span:first-child{font-size:.62em;}
+.top-row .badge-row .slot-badge{gap:.15em;}
 .top-row .badge-row #slotInfo > .slot-label{font-size:1.6em;line-height:1;font-weight:800;margin-right:0;}
 .top-row .badge-row #slotInfo{gap:.2em;padding-left:.5em;}
 
@@ -289,7 +290,7 @@ body.search-open .top-row .search-bar{visibility:visible;opacity:1;pointer-event
 .top-row #searchClear{display:flex !important;font-size:calc(var(--fs)*1.05);}
 .search-nav:hover,.top-row #searchClear:hover{background:#3a3a3c;color:#fff;}
 .search-nav svg{width:1.1em;height:1.1em;}
-#searchFab{position:fixed;bottom:14px;right:14px;width:2.4em;height:2.4em;border-radius:50%;border:0;background:#2b2b2d;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.3;z-index:89;padding:0;font-size:var(--fs);box-shadow:0 4px 12px rgba(0,0,0,.3);transition:opacity .15s;}
+#searchFab{position:fixed;top:6px;right:8px;width:2em;height:2em;border-radius:50%;border:0;background:#2b2b2d;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.45;z-index:89;padding:0;font-size:var(--fs);box-shadow:0 4px 12px rgba(0,0,0,.3);transition:opacity .15s;}
 #searchFab:hover{opacity:1;}
 #searchFab svg{width:1.2em;height:1.2em;}
 body.search-open #searchFab{display:none;}
@@ -352,7 +353,7 @@ input.points-add{width:2.55em;min-width:2.55em;font-size:.8em;padding:.1em 0 .1e
       <button type="button" id="searchClear" title="Tutup (Esc)">✕</button>
     </div>
     <div class="badge-row">
-    <div class="slot-badge plus-set" title="Nilai poin awal otomatis untuk peserta yang kolom Pay-nya berisi BIN, juga nilai bawaan tombol + (kolom ± kosong)"><span>+ POINT BIN</span><input type="number" id="plusDefault" value="0" step="1"></div>
+    <div class="slot-badge plus-set" title="Nilai poin awal otomatis untuk peserta yang kolom Pay-nya berisi BIN, juga nilai bawaan tombol + (kolom ± kosong)"><span>+BIN</span><input type="number" id="plusDefault" value="0" step="1"></div>
     <div class="slot-badge plus-set usn-set" title="Kolom ADD USN, diisi manual"><span>USN</span><input type="text" id="addUsn" placeholder="isi USN..." autocomplete="off" spellcheck="false"></div>
     <div class="slot-badge plus-set usn-set map-set" title="Kolom MAP: klik untuk pilih dari daftar, atau ketik sendiri"><span>MAP</span><input type="text" id="addMap" list="mapList" placeholder="pilih map..." autocomplete="off" spellcheck="false"><button type="button" class="map-clear" id="mapClear" title="Kosongkan MAP">✕</button></div>
     <div class="slot-badge plus-set usn-set start-set" title="Jam start lomba: klik untuk pilih jam"><span>START</span><input type="time" id="jamStart"></div>
