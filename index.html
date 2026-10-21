@@ -260,19 +260,40 @@ tbody tr.search-hit td:last-child{box-shadow:inset -4px 0 0 #E65100,inset 0 4px 
 .map-clear{display:none !important;}
 
 /* Baris badge: selalu sejajar 1 baris, USN & MAP mengecil kalau tidak muat */
-.badge-row{display:flex;flex:1 1 100%;flex-wrap:nowrap;align-items:center;gap:8px;min-width:0;}
+.badge-row{display:flex;flex:1 1 100%;flex-wrap:wrap;align-items:center;gap:8px 10px;min-width:0;}
 .badge-row .slot-badge{min-width:min-content;flex-shrink:0;}
 .badge-row .slot-badge.plus-set:not(.usn-set),.badge-row .start-set,.badge-row #slotInfo{flex:0 0 auto;}
 /* USN & MAP: melebar mengikuti isi (lebar input diatur script), tidak pernah terpotong */
 .badge-row .slot-badge.usn-set:not(.start-set){flex:1 0 auto;}
 .badge-row .slot-badge.usn-set:not(.start-set) input{flex:1 0 auto;}
-.top-row .badge-row .slot-badge{font-size:calc(var(--fs)*1.2);}
+.top-row .badge-row .slot-badge{font-size:calc(var(--fs)*1.75);}
+.top-row .badge-row .slot-badge > span:first-child{font-size:.62em;}
+.top-row .badge-row #slotInfo > .slot-label{font-size:1.6em;line-height:1;font-weight:800;margin-right:0;}
+.top-row .badge-row #slotInfo{gap:.2em;padding-left:.5em;}
 
 /* ===== Search paling atas: tanpa jarak ===== */
 body{padding-top:0;}
 .panel{padding-top:6px;border-top:none;border-radius:0 0 4px 4px;}
 .top-row{margin-top:0;}
 .top-row .search-bar{margin-top:0;border-top-width:2px;}
+
+/* ===== SEARCH MENGAMBANG di kanan atas: muncul saat Ctrl+F, hilang saat Esc / kosong ===== */
+.top-row .search-bar{position:fixed;top:10px;right:14px;left:auto;width:400px;max-width:calc(100vw - 28px);flex:none;margin:0;padding:6px 14px;gap:10px;background:#2b2b2d;border:0;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.35);z-index:90;visibility:hidden;opacity:0;pointer-events:none;transition:opacity .12s;}
+body.search-open .top-row .search-bar{visibility:visible;opacity:1;pointer-events:auto;}
+.top-row .search-bar.active{background:#2b2b2d;border:0;}
+.top-row #searchInput{font-size:calc(var(--fs)*1.15);color:#fff;padding:.3em 4px;}
+#searchInput::placeholder{color:#8e8e93;opacity:1;}
+.top-row #searchCount{background:transparent;color:#a0a0a5;font-size:calc(var(--fs)*.8);padding:0;}
+.top-row #searchCount.none{background:transparent;color:#ff8a80;}
+.search-nav,.top-row #searchClear{flex:none;display:flex;align-items:center;justify-content:center;width:1.8em;height:1.8em;border:0;background:transparent;color:#8e8e93;border-radius:6px;padding:0;cursor:pointer;font-family:inherit;}
+.top-row #searchClear{display:flex !important;font-size:calc(var(--fs)*1.05);}
+.search-nav:hover,.top-row #searchClear:hover{background:#3a3a3c;color:#fff;}
+.search-nav svg{width:1.1em;height:1.1em;}
+#searchFab{position:fixed;bottom:14px;right:14px;width:2.4em;height:2.4em;border-radius:50%;border:0;background:#2b2b2d;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.3;z-index:89;padding:0;font-size:var(--fs);box-shadow:0 4px 12px rgba(0,0,0,.3);transition:opacity .15s;}
+#searchFab:hover{opacity:1;}
+#searchFab svg{width:1.2em;height:1.2em;}
+body.search-open #searchFab{display:none;}
+tbody tr.search-hit.search-cur td,tbody tr.search-hit.search-cur td.name-cell,tbody tr.search-hit.search-cur td.poin-cell{background:#FFC107;}
 
 /* ===== TANDA MERAH: klik kolom NO untuk mewarnai baris merah / membatalkan ===== */
 td.rank.red-toggle{cursor:pointer;user-select:none;-webkit-user-select:none;}
@@ -323,36 +344,39 @@ input.points-add{width:2.55em;min-width:2.55em;font-size:.8em;padding:.1em 0 .1e
   <div class="panel">
     <div class="top-row">
     <div class="search-bar">
-      <span class="search-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="#35A04A" stroke-width="2.6" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></span>
-      <input type="text" id="searchInput" placeholder="Cari Display, Enter = poin ikan..." autocomplete="off">
-      <span class="search-key" title="Pintasan keyboard">Ctrl+F</span>
+      <span class="search-icon"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="#B0B0B0" stroke-width="2.6" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></span>
+      <input type="text" id="searchInput" placeholder="Find..." autocomplete="off">
       <span id="searchCount"></span>
-      <button type="button" id="searchClear" title="Hapus pencarian (Esc)">✕</button>
+      <button type="button" class="search-nav" id="searchPrev" title="Sebelumnya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg></button>
+      <button type="button" class="search-nav" id="searchNext" title="Berikutnya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+      <button type="button" id="searchClear" title="Tutup (Esc)">✕</button>
     </div>
     <div class="badge-row">
     <div class="slot-badge plus-set" title="Nilai poin awal otomatis untuk peserta yang kolom Pay-nya berisi BIN, juga nilai bawaan tombol + (kolom ± kosong)"><span>+ POINT BIN</span><input type="number" id="plusDefault" value="0" step="1"></div>
-    <div class="slot-badge plus-set usn-set" title="Kolom ADD USN, diisi manual"><span>ADD USN</span><input type="text" id="addUsn" placeholder="isi USN..." autocomplete="off" spellcheck="false"></div>
-    <div class="slot-badge plus-set usn-set map-set" title="Kolom MAP: klik untuk pilih dari daftar, atau ketik sendiri"><span>MAP</span><input type="text" id="addMap" list="mapList" placeholder="pilih / ketik map..." autocomplete="off" spellcheck="false"><button type="button" class="map-clear" id="mapClear" title="Kosongkan MAP">✕</button></div>
-    <div class="slot-badge plus-set usn-set start-set" title="Jam start lomba: klik untuk pilih jam"><span>JAM START</span><input type="time" id="jamStart"></div>
+    <div class="slot-badge plus-set usn-set" title="Kolom ADD USN, diisi manual"><span>USN</span><input type="text" id="addUsn" placeholder="isi USN..." autocomplete="off" spellcheck="false"></div>
+    <div class="slot-badge plus-set usn-set map-set" title="Kolom MAP: klik untuk pilih dari daftar, atau ketik sendiri"><span>MAP</span><input type="text" id="addMap" list="mapList" placeholder="pilih map..." autocomplete="off" spellcheck="false"><button type="button" class="map-clear" id="mapClear" title="Kosongkan MAP">✕</button></div>
+    <div class="slot-badge plus-set usn-set start-set" title="Jam start lomba: klik untuk pilih jam"><span>START</span><input type="time" id="jamStart"></div>
     <datalist id="mapList"></datalist>
-    <div class="slot-badge" id="slotInfo" title="Jumlah Nama Peserta yang masih kosong"><span class="slot-label">Sisa Slot</span><span class="slot-num" id="slotLeft">0</span></div>
+    <div class="slot-badge" id="slotInfo" title="Jumlah Nama Peserta yang masih kosong"><span class="slot-label">-</span><span class="slot-num" id="slotLeft">0</span></div>
     </div>
     </div>
     <div class="tables">
       <div class="table-scroll"><table>
         <colgroup><col class="col-rank"><col class="col-name"><col class="col-pay"><col class="col-nick"><col class="col-points"><col class="col-join"><col class="col-hist"></colgroup>
-        <thead><tr><th class="colhead">NO</th><th class="colhead">NAMA</th><th class="colhead">Pay</th><th class="colhead ">DISPLAY AKUN</th><th class="colhead ">POINT</th><th class="colhead">Absen</th><th class="colhead">History</th></tr></thead>
+        <thead><tr><th class="colhead">NO</th><th class="colhead">NAMA</th><th class="colhead">Pay</th><th class="colhead ">DISPLAY NAMA</th><th class="colhead ">POINT</th><th class="colhead">Absen</th><th class="colhead">History</th></tr></thead>
         <tbody id="tableBodyTop"></tbody>
       </table></div>
       <div class="table-scroll"><table>
         <colgroup><col class="col-rank"><col class="col-name"><col class="col-pay"><col class="col-nick"><col class="col-points"><col class="col-join"><col class="col-hist"></colgroup>
-        <thead><tr><th class="colhead">NO</th><th class="colhead ">NAMA</th><th class="colhead">Pay</th><th class="colhead ">DISPLAY AKUN</th><th class="colhead ">POINT</th><th class="colhead">Absen</th><th class="colhead">History</th></tr></thead>
+        <thead><tr><th class="colhead">NO</th><th class="colhead ">NAMA</th><th class="colhead">Pay</th><th class="colhead ">DISPLAY NAMA</th><th class="colhead ">POINT</th><th class="colhead">Absen</th><th class="colhead">History</th></tr></thead>
         <tbody id="tableBodyBottom"></tbody>
       </table></div>
     </div>
     <div class="copyright"><span class="copy-mark" title="Copyright">&copy;</span><span class="adm-trigger" id="admTrigger">Created</span> By Aaronnn<span class="red-note"><b>NOTE:</b> Klik no peserta untuk memerahkan display &nbsp;|&nbsp; Klik Pay yang sudah diisi untuk menandakan sudah dibayar</span></div>
   </div>
 </div>
+
+<button type="button" id="searchFab" title="Cari (Ctrl+F)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></button>
 
 <div class="modal-overlay" id="histModal">
   <div class="modal-box">
@@ -460,6 +484,17 @@ function getPlusDefault() {
     document.getElementById('slotInfo').classList.toggle('full', left === 0);
   }
 
+  let searchIdx = 0;
+  function markCur(scroll){
+    const hits = [...document.querySelectorAll('tr.search-hit')];
+    document.querySelectorAll('tr.search-cur').forEach(r => r.classList.remove('search-cur'));
+    if(!hits.length) return;
+    searchIdx = ((searchIdx % hits.length) + hits.length) % hits.length;
+    const cur = hits[searchIdx];
+    cur.classList.add('search-cur');
+    if(scroll) cur.scrollIntoView({ block:'center', behavior:'smooth' });
+  }
+  function stepSearch(d){ searchIdx += d; markCur(true); }
   function applySearch(scroll){
     const q = searchInput.value.trim().toLowerCase();
     searchClear.style.display = q ? 'block' : 'none';
@@ -476,31 +511,59 @@ function getPlusDefault() {
     cnt.style.display = q ? 'inline-block' : 'none';
     cnt.classList.toggle('none', !!q && count === 0);
     cnt.textContent = count ? (count + ' ditemukan') : 'Tidak ditemukan';
-    if(scroll && first) first.scrollIntoView({ block:'center', behavior:'smooth' });
+    markCur(!!scroll);
   }
-  searchInput.addEventListener('input', () => applySearch(true));
+
+  // ===== Search tersembunyi: hanya muncul lewat Ctrl+F =====
+  function openSearch(){
+    document.body.classList.add('search-open');
+    searchInput.focus({ preventScroll:true });
+    searchInput.select();
+  }
+  function closeSearch(){
+    searchInput.value = '';
+    applySearch();
+    document.body.classList.remove('search-open');
+    searchInput.blur();
+  }
+  searchInput.addEventListener('input', () => { searchIdx = 0; applySearch(true); });
   searchInput.addEventListener('keydown', (e) => {
     if(e.key === 'Enter'){
       e.preventDefault();
       // Enter = langsung buka popup "Tarik Ikan" untuk peserta pertama yang ditemukan
-      const hit = document.querySelector('tr.search-hit');
+      const hit = document.querySelector('tr.search-cur') || document.querySelector('tr.search-hit');
       if(hit) openFish(Number(hit.dataset.id));
     } else if(e.key === 'Escape'){
-      searchInput.value = '';
-      applySearch();
-      searchInput.blur();
+      closeSearch();
     }
   });
-  searchClear.addEventListener('click', () => { searchInput.value = ''; applySearch(); searchInput.focus(); });
+  // Kalau kolom search kosong lalu kehilangan fokus, sembunyikan lagi
+  searchInput.addEventListener('blur', () => {
+    setTimeout(() => {
+      if(searchInput.value.trim() === '' && document.activeElement !== searchInput && !fishModal.classList.contains('open')){
+        document.body.classList.remove('search-open');
+      }
+    }, 150);
+  });
+  searchClear.addEventListener('mousedown', (e) => e.preventDefault());
+  searchClear.addEventListener('click', () => closeSearch());
+  // Tombol kecil kanan atas = cadangan kalau Ctrl+F ditangkap browser (mis. fokus belum di halaman)
+  document.getElementById('searchFab').addEventListener('click', openSearch);
+  // Pastikan halaman memegang fokus keyboard supaya Ctrl+F sampai ke halaman, bukan ke browser
+  window.focus();
+  document.addEventListener('pointerdown', () => window.focus(), { once:true });
+  ['searchPrev','searchNext'].forEach(id => {
+    const b = document.getElementById(id);
+    b.addEventListener('mousedown', (e) => e.preventDefault());
+    b.addEventListener('click', () => stepSearch(id === 'searchNext' ? 1 : -1));
+  });
 
-  // Pintasan Ctrl+F (atau Cmd+F di Mac): langsung fokus ke kolom search
+  // Pintasan Ctrl+F (atau Cmd+F di Mac): munculkan kolom search lalu langsung fokus
   document.addEventListener('keydown', (e) => {
     if((e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'f'){
       e.preventDefault();
       if(histModal.classList.contains('open')) closeHistory();
-      window.scrollTo({ top:0, behavior:'smooth' });
-      searchInput.focus();
-      searchInput.select();
+      openSearch();
     }
   });
 
@@ -601,7 +664,7 @@ function getPlusDefault() {
     t.flash = { dir: 'up', time: Date.now() };   // kedip hijau (poin naik)
     t.history.push({ delta, after: t.points, time: Date.now(), label: picked.map(f => f.n).join(' + ') });
     closeFish();
-    // Kosongkan search supaya siap untuk pencarian berikutnya
+    // Kosongkan search supaya siap untuk pencarian berikutnya (kolom search tetap terbuka)
     searchInput.value = '';
     render();
     searchInput.focus();
@@ -795,7 +858,7 @@ function getPlusDefault() {
     addInput.title = 'Ketik angka positif untuk tambah, atau minus (mis. -2) untuk kurangi poin, lalu tekan Enter atau tombol +';
     addInput.dataset.id = team.id;
     addInput.dataset.field = 'add';
-    addInput.value = '1';
+    addInput.value = '0';
     addInput.min = '-999';
     addInput.addEventListener('focus', (e) => e.target.select());
 
@@ -804,7 +867,7 @@ function getPlusDefault() {
       let delta = parseInt(addInput.value, 10);
       if(isNaN(delta) && useDefault === true) delta = getPlusDefault();
       if(subtract === true && !isNaN(delta)) delta = -Math.abs(delta);
-      if(isNaN(delta) || delta === 0){ addInput.value = '1'; return; }
+      if(isNaN(delta) || delta === 0){ addInput.value = '0'; return; }
       const t = teams.find(x => x.id === team.id);
       const newPoints = Math.max(0, t.points + delta);
       const actualDelta = newPoints - t.points;
@@ -815,14 +878,14 @@ function getPlusDefault() {
       pointsInput.value = t.points;
       applyScoreColor(tr, tdPoints, t.points);
       applyRankColor(tr, rank, t.points);
-      addInput.value = '1';
+      addInput.value = '0';
       pendingFocus = { id: team.id, field: 'add' };
       scheduleRender();
     }
     addInput.addEventListener('keydown', (e) => { if(e.key === 'Enter'){ e.preventDefault(); commitAdd(); } });
     addInput.addEventListener('blur', () => {
-      if(addInput.value !== '' && addInput.value !== '1') commitAdd();
-      else addInput.value = '1';
+      if(addInput.value !== '' && addInput.value !== '0') commitAdd();
+      else addInput.value = '0';
     });
 
     const addBtn = document.createElement('button');
