@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -377,6 +376,31 @@ html[data-theme="dark"] .spin button{background:#11181C;color:var(--muted);borde
 /* Angka poin diperbesar (kolom POINT dilebarkan secukupnya) */
 col.col-rank{width:6%}col.col-name{width:28%}col.col-nick{width:37%}col.col-points{width:16.5%}col.col-join{width:6%}col.col-hist{width:6.5%}
 input.points{font-size:2.3em;width:1.5em;height:1.15em;border-width:3px;margin-right:.08em}
+
+/* ===== Baris akun: nama kosong = putih/hijau muda (default), nama terisi + poin 0 = merah, poin > 0 = hijau ===== */
+tbody tr.cr.zero:not(.blank):not(.red):not(.search-hit) td,
+tbody tr.cr.zero:not(.blank):not(.red):not(.search-hit) td.name-cell,
+tbody tr.cr.zero:not(.blank):not(.red):not(.search-hit) td.poin-cell,
+tbody tr.cr.zero:not(.blank):not(.red):not(.search-hit) td.rank{background:#E53935;color:#fff}
+
+tbody tr.cr.pos:not(.red):not(.search-hit) td,
+tbody tr.cr.pos:not(.red):not(.search-hit) td.name-cell,
+tbody tr.cr.pos:not(.red):not(.search-hit) td.poin-cell,
+tbody tr.cr.pos:not(.red):not(.search-hit) td.rank{background:#1FA35C;color:#fff}
+
+tbody tr.cr.zero:not(.blank):not(.red):not(.search-hit) input.team-name,
+tbody tr.cr.zero:not(.blank):not(.red):not(.search-hit) input.team-nick,
+tbody tr.cr.pos:not(.red):not(.search-hit) input.team-name,
+tbody tr.cr.pos:not(.red):not(.search-hit) input.team-nick{color:#fff}
+
+tbody tr.cr.zero:not(.blank):not(.red):not(.search-hit) input.team-name::placeholder,
+tbody tr.cr.zero:not(.blank):not(.red):not(.search-hit) input.team-nick::placeholder{color:#FFCDD2}
+tbody tr.cr.pos:not(.red):not(.search-hit) input.team-name::placeholder,
+tbody tr.cr.pos:not(.red):not(.search-hit) input.team-nick::placeholder{color:#D8F5E3}
+
+/* saat kolom nama diketik, tetap putih/hitam agar terbaca */
+tbody tr.cr.zero input.team-name:focus,tbody tr.cr.zero input.team-nick:focus,
+tbody tr.cr.pos input.team-name:focus,tbody tr.cr.pos input.team-nick:focus{background:#fff;color:#000}
 </style>
 </head>
 <body>
@@ -764,10 +788,9 @@ input.points{font-size:2.3em;width:1.5em;height:1.15em;border-width:3px;margin-r
     nickInput.addEventListener('input', e => { team.nickname = e.target.value; applySearch(); });
     tdNick.appendChild(nickInput);
 
-    // Warna: poin akun 0 = merah, >0 = hijau; clan juara 1-3 = emas/perak/perunggu
+    // Warna: nama kosong = putih/hijau muda; nama terisi + poin 0 = merah; poin >0 = hijau
     tr.classList.toggle('zero', team.points <= 0);
     tr.classList.toggle('pos', team.points > 0);
-    if(clanSum > 0 && clanRank <= 3) tr.classList.add('rank-' + clanRank);
 
     const tdPoints = document.createElement('td');
     tdPoints.className = 'poin-cell';
