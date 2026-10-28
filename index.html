@@ -75,12 +75,6 @@ input.team-name:focus,input.team-nick:focus{outline:none;background:#fff;box-sha
 .points-wrap>*{flex-shrink:0}
 input.points{width:1.6em;min-width:0;border:2px solid rgba(0,0,0,.6);border-radius:6px;background:#fff;font-family:inherit;font-weight:800;font-size:1.5em;color:var(--ink);text-align:center;padding:0 .1em;line-height:1.2;height:1.2em;margin-right:.15em;cursor:default;-webkit-appearance:none;appearance:none;-webkit-text-fill-color:currentColor;opacity:1}
 input.points:focus{outline:none}
-input.points-add{width:2.55em;min-width:2.55em;border:1px solid #9A9A9A;background:#fff;font-family:inherit;font-weight:800;font-size:.8em;color:var(--ink);text-align:center;padding:.1em 0 .1em .1em;border-radius:2px}
-input.points-add::placeholder{color:#8A8A8A}
-input.points-add:focus{outline:none;border-color:var(--green)}
-input.points-add::-webkit-inner-spin-button,input.points-add::-webkit-outer-spin-button{-webkit-appearance:inner-spin-button;opacity:1;height:1.5em;margin-left:1px;cursor:pointer}
-.add-btn{width:1em;min-width:1em;height:1.3em;border-radius:2px;border:1px solid var(--green);background:rgba(255,255,255,.75);color:var(--green);font-family:inherit;font-weight:700;font-size:.9em;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
-.add-btn:active{transform:scale(.9)}
 .fish-btn{font-size:1em;height:1.4em;border-radius:4px;border:1px solid #1565C0;background:#E3F2FD;cursor:pointer;padding:0 .1em;display:flex;align-items:center;justify-content:center;font-family:inherit}
 .fish-btn img{height:1.05em;width:auto;display:block;pointer-events:none}
 .fish-btn:hover{background:#BBDEFB}.fish-btn:active{transform:scale(.93)}
@@ -193,9 +187,7 @@ tbody tr.red input.team-name:focus,tbody tr.red input.team-nick:focus{background
 tbody tr.red.search-hit td,tbody tr.red.search-hit td.name-cell,tbody tr.red.search-hit td.poin-cell{background:#FF8A80}
 tbody tr.red.search-hit input.team-name,tbody tr.red.search-hit input.team-nick{color:#000}
 .copyright{margin-top:4px;padding-top:2px;text-align:center;font-weight:800;font-size:calc(var(--fs)*1.2);line-height:1.15;color:#D32F2F;letter-spacing:.3px}
-.adm-trigger{cursor:pointer}.copy-mark{margin-right:.08em}
-.red-note{display:inline-block;margin-left:1.2em;font-size:.55em;font-weight:600;color:#5D4037;vertical-align:middle;background:#FFF59D;border:2px solid #F9A825;border-left:6px solid #F9A825;border-radius:4px;padding:.3em .8em;box-shadow:0 2px 4px rgba(0,0,0,.15)}
-.red-note b{color:#D32F2F;font-weight:800;margin-right:.3em}
+.adm-trigger{cursor:pointer}
 @media (max-width:520px){.modal-title{font-size:22px}.modal-title small{font-size:16px}.hist-delta{font-size:28px;min-width:76px}.hist-after{font-size:19px}.hist-time{font-size:16px}}
 /* Bar atas: semua kotak sama tinggi dengan timer */
 .badge-row{--bar-h:78px;align-items:stretch}
@@ -239,9 +231,7 @@ tbody tr.search-hit input.team-name,tbody tr.search-hit input.team-nick{color:#0
 /* ===== MODE MALAM ===== */
 html[data-theme="dark"]{--sheet-bg:#0F1417;--cell-bg:#1C2429;--ink:#EEF3F0;--muted:#9FB0A8;--stripe:#26343B;--grid:#3A4A52;--head-bg:#1B7A3A;--green:#34C873;--sel-border:#34C873;--bd:#8DA0A8;color-scheme:dark}
 html[data-theme="dark"] .panel{box-shadow:0 2px 8px rgba(0,0,0,.5)}
-html[data-theme="dark"] input.points,html[data-theme="dark"] input.points-add,html[data-theme="dark"] .add-btn,html[data-theme="dark"] .join-btn,html[data-theme="dark"] .hist-btn,html[data-theme="dark"] .modal-close,html[data-theme="dark"] .plus-set input,html[data-theme="dark"] .t-fields input{background:#11181C;color:var(--ink)}
-html[data-theme="dark"] input.points-add{border-color:#5B6B72}
-html[data-theme="dark"] .add-btn{color:var(--green)}
+html[data-theme="dark"] input.points,html[data-theme="dark"] .join-btn,html[data-theme="dark"] .hist-btn,html[data-theme="dark"] .modal-close,html[data-theme="dark"] .plus-set input,html[data-theme="dark"] .t-fields input{background:#11181C;color:var(--ink)}
 html[data-theme="dark"] .join-btn{border-color:#8DA0A8}
 html[data-theme="dark"] .join-btn.joined{background:#1FA35C;border-color:#137E43;color:#fff}
 html[data-theme="dark"] .fish-btn{background:#16303F;border-color:#4A90D9}
@@ -330,52 +320,13 @@ tr.ch .ctot b,tr.ch.rank-1 .ctot b,tr.ch.rank-2 .ctot b,tr.ch.rank-3 .ctot b{col
 tr.ch input.clan-name,tr.ch.rank-1 input.clan-name,tr.ch.rank-2 input.clan-name,tr.ch.rank-3 input.clan-name{color:#0B3D1E;background:#FFF8E1;border:3px solid #0B3D1E;border-left:12px solid var(--cc,#0B3D1E);border-radius:8px;text-shadow:none;letter-spacing:2px;box-shadow:0 3px 0 rgba(0,0,0,.35)}
 tr.ch input.clan-name:focus{background:#fff}
 tr.ch input.clan-name::placeholder{color:rgba(11,61,30,.55);text-shadow:none}
-/* Kolom POINT: angka poin besar, tombol-tombol di sampingnya kecil */
-input.points{font-size:2.3em;width:1.55em;height:1.15em;border-width:3px;margin-right:.1em}
-input.points-add{width:2.2em;min-width:2.2em;font-size:.68em}
-.add-btn{font-size:.75em;height:1.35em}
-.fish-btn{height:1.2em}
-.fish-btn img{height:.9em}
-.points-wrap{gap:0}
-/* Kolom POINT dipersempit, kolom nama dilebarkan */
-col.col-rank{width:6%}col.col-name{width:26%}col.col-nick{width:37%}col.col-points{width:18%}col.col-join{width:6.5%}col.col-hist{width:6.5%}
-/* Kolom POINT dipersempit lagi */
-col.col-rank{width:6%}col.col-name{width:28%}col.col-nick{width:38%}col.col-points{width:15%}col.col-join{width:6.5%}col.col-hist{width:6.5%}
-input.points{font-size:1.9em;width:1.5em;height:1.15em;border-width:2px}
-input.points-add{width:2em;min-width:2em;font-size:.62em}
-.add-btn{font-size:.7em}
-.fish-btn{height:1.1em;padding:0 .05em}
-.fish-btn img{height:.8em}
-.hist-btn .ico{width:1.2em;height:1.2em}
-/* Kolom POINT paling ramping */
-col.col-rank{width:6%}col.col-name{width:29%}col.col-nick{width:40%}col.col-points{width:12.5%}col.col-join{width:6.25%}col.col-hist{width:6.25%}
-input.points{font-size:1.55em;width:1.45em;height:1.15em;margin-right:.05em}
-input.points-add{width:1.9em;min-width:1.9em;font-size:.55em;padding:.1em 0}
-input.points-add::-webkit-inner-spin-button,input.points-add::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;display:none}
-input.points-add{-moz-appearance:textfield;appearance:textfield}
-.add-btn{font-size:.62em;width:1.1em;min-width:1.1em}
-.fish-btn{height:1em;padding:0}
-.fish-btn img{height:.72em}
-/* Panah naik-turun di kotak ± dikembalikan */
-col.col-nick{width:39%}col.col-points{width:13.5%}
-input.points-add{-moz-appearance:auto;appearance:auto;width:2.7em;min-width:2.7em;font-size:.6em}
-input.points-add::-webkit-inner-spin-button,input.points-add::-webkit-outer-spin-button{-webkit-appearance:inner-spin-button;display:block;opacity:1;height:1.6em;margin-left:1px;cursor:pointer}
-/* Kotak ± seperti contoh: angka + panah naik-turun abu-abu */
-input.points-add{-moz-appearance:auto;appearance:auto;width:2.6em;min-width:2.6em;font-size:.8em;font-weight:800;text-align:left;padding:.1em 0 .1em .35em;border:1px solid #9A9A9A;border-radius:3px;background:#fff;color:#000;height:1.5em}
-input.points-add::-webkit-inner-spin-button,input.points-add::-webkit-outer-spin-button{-webkit-appearance:inner-spin-button;display:block;opacity:1;height:1.5em;margin-left:1px;cursor:pointer}
-.add-btn{font-size:.8em;width:1em;min-width:1em;height:1.3em}
-/* Tombol atas/bawah buatan sendiri (selalu tampil) */
-input.points-add{-moz-appearance:textfield;appearance:textfield;width:2.1em;min-width:2.1em;padding:.1em 0;text-align:center}
-input.points-add::-webkit-inner-spin-button,input.points-add::-webkit-outer-spin-button{-webkit-appearance:none;display:none;margin:0}
-.spin{display:flex;flex-direction:column;gap:1px;margin:0 2px 0 1px}
-.spin button{width:1em;height:.62em;padding:0;border:1px solid #9A9A9A;border-radius:2px;background:#ECEFF1;color:#455A64;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.spin button svg{width:.6em;height:.4em;display:block}
-.spin button:hover{background:#CFD8DC;border-color:var(--green)}
-.spin button:active{transform:scale(.9)}
-html[data-theme="dark"] .spin button{background:#11181C;color:var(--muted);border-color:#5B6B72}
-/* Angka poin diperbesar (kolom POINT dilebarkan secukupnya) */
+/* Kolom POINT: angka poin besar + tombol ± + tombol ikan */
 col.col-rank{width:6%}col.col-name{width:28%}col.col-nick{width:37%}col.col-points{width:16.5%}col.col-join{width:6%}col.col-hist{width:6.5%}
 input.points{font-size:2.3em;width:1.5em;height:1.15em;border-width:3px;margin-right:.08em}
+.points-wrap{gap:0}
+.fish-btn{height:1.2em;padding:0 .05em}
+.fish-btn img{height:.9em}
+.hist-btn .ico{width:1.2em;height:1.2em}
 
 /* ===== Baris akun: nama kosong = putih/hijau muda (default), nama terisi + poin 0 = merah, poin > 0 = hijau ===== */
 tbody tr.cr.zero:not(.blank):not(.red):not(.search-hit) td,
@@ -401,6 +352,40 @@ tbody tr.cr.pos:not(.red):not(.search-hit) input.team-nick::placeholder{color:#D
 /* saat kolom nama diketik, tetap putih/hitam agar terbaca */
 tbody tr.cr.zero input.team-name:focus,tbody tr.cr.zero input.team-nick:focus,
 tbody tr.cr.pos input.team-name:focus,tbody tr.cr.pos input.team-nick:focus{background:#fff;color:#000}
+
+/* ===== Tombol ± + popup Tambah / Kurang Poin ===== */
+.pm-btn{flex:none;width:2.3em;height:1.5em;margin:0 .15em;border-radius:6px;border:2px solid var(--green);background:#E6F5EC;color:var(--green);font-family:inherit;font-weight:800;font-size:.9em;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.pm-btn:hover{background:#CDEBD8}.pm-btn:active{transform:scale(.92)}
+html[data-theme="dark"] .pm-btn{background:#1E3A2A}
+#pmModal .modal-box{max-width:400px}
+#pmModal .modal-head{padding:12px 18px}
+#pmModal .modal-title{font-size:23px}
+#pmModal .modal-title small{font-size:17px;margin-top:2px;font-weight:700}
+#pmModal .modal-close{width:38px;height:38px;font-size:20px;background:#FFF3E0;border-color:#E8D3B0;color:#E65100}
+.pm-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;padding:16px}
+.pm-grid button{height:52px;border-radius:8px;font-family:inherit;font-weight:800;font-size:20px;cursor:pointer;background:#fff}
+.pm-grid button:active{transform:scale(.93)}
+.pm-grid .pm-plus{border:2px solid #137E43;color:#137E43;background:#E6F5EC}
+.pm-grid .pm-plus:hover{background:#CDEBD8}
+.pm-grid .pm-minus{border:2px solid #E5484D;color:#C62828;background:#FFE9E7}
+.pm-grid .pm-minus:hover{background:#FFD0CC}
+html[data-theme="dark"] .pm-grid .pm-plus{background:#1E3A2A;color:#7CE3A5;border-color:#34C873}
+html[data-theme="dark"] .pm-grid .pm-minus{background:#3B1E1E;color:#FF8A80;border-color:#E5484D}
+
+/* ===== PERBAIKAN: saat mengetik di kolom nama, selalu latar putih + teks hitam ===== */
+tbody tr.cr input.team-name:focus,
+tbody tr.cr input.team-nick:focus{
+  background:#fff !important;
+  color:#000 !important;
+  -webkit-text-fill-color:#000 !important;
+}
+tbody tr.cr input.team-name:focus::placeholder,
+tbody tr.cr input.team-nick:focus::placeholder{
+  color:#777 !important;
+}
+
+/* ===== Tulisan Created diperbesar ===== */
+.copyright{font-size:calc(var(--fs)*2.4);margin-top:10px;padding-top:4px;line-height:1.2}
 </style>
 </head>
 <body>
@@ -440,7 +425,7 @@ tbody tr.cr.pos input.team-name:focus,tbody tr.cr.pos input.team-nick:focus{back
         <tbody id="tableBodyBottom"></tbody>
       </table>
     </div>
-    <div class="copyright"><span class="copy-mark">&copy;</span><span class="adm-trigger" id="admTrigger">Created</span> By Aaronnn<span class="red-note"><b>NOTE:</b> Klik nomor akun untuk memerahkan display</span></div>
+    <div class="copyright"><span class="adm-trigger" id="admTrigger">Created</span> By Aaronnn</div>
   </div>
 </div>
 
@@ -467,6 +452,10 @@ tbody tr.cr.pos input.team-name:focus,tbody tr.cr.pos input.team-nick:focus{back
   <div class="modal-head"><div class="modal-title">Tarik Ikan<small id="fishSub"></small></div><button type="button" class="modal-close" id="fishClose">✕</button></div>
   <div class="modal-body" id="fishList"></div>
   <div class="fish-foot"><span>Total: <b id="fishTotal">+0</b></span><button type="button" class="fish-ok" id="fishOk">Tambah</button></div>
+</div></div>
+<div class="modal-overlay" id="pmModal"><div class="modal-box">
+  <div class="modal-head"><div class="modal-title">Tambah / Kurang Poin<small id="pmSub"></small></div><button type="button" class="modal-close" id="pmClose">✕</button></div>
+  <div class="pm-grid" id="pmGrid"></div>
 </div></div>
 
 <script>
@@ -498,12 +487,11 @@ tbody tr.cr.pos input.team-name:focus,tbody tr.cr.pos input.team-nick:focus{back
   const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
 
   const tbodyTop = document.getElementById('tableBodyTop');
-    const tbodyBottom = document.getElementById('tableBodyBottom');
+  const tbodyBottom = document.getElementById('tableBodyBottom');
   const histModal = document.getElementById('histModal');
   const searchInput = document.getElementById('searchInput');
   const searchClear = document.getElementById('searchClear');
   const plusDefaultInput = { value: '0' };   // badge +POINT dihapus
-  const getPlusDefault = () => 1;
 
   // Ubah poin akun: poin, history, kedip akun + kedip clan
   function applyDelta(t, delta, label){
@@ -536,10 +524,8 @@ tbody tr.cr.pos input.team-name:focus,tbody tr.cr.pos input.team-nick:focus{back
     document.getElementById('slotInfo').classList.toggle('full', left === 0);
   }
 
-  // Ringkasan di header clan: jumlah absen & jumlah lunas
+  // Ringkasan di header clan
   function clanInfoHTML(c){
-    const ts = clanTeams(c);
-    const absen = ts.filter(t => t.joined).length;
     return '<span>TOTAL</span><span>POINT</span>';   // label untuk kotak total poin
   }
   function updateClanInfo(c){
@@ -655,7 +641,7 @@ tbody tr.cr.pos input.team-name:focus,tbody tr.cr.pos input.team-nick:focus{back
   document.getElementById('admModalClose').addEventListener('click', closeAdmin);
   admModal.addEventListener('click', e => { if(e.target === admModal) closeAdmin(); });
   document.getElementById('admTrigger').addEventListener('click', openAdmin);
-  document.addEventListener('keydown', e => { if(e.key === 'Escape'){ closeAdmin(); closeHistory(); closeFish(); } });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape'){ closeAdmin(); closeHistory(); closeFish(); closePm(); } });
 
   // ===== Tarik Ikan =====
   const FISH = [{n:'Secret',p:1},{n:'Big',p:1},{n:'Shiny',p:1},{n:'Mutasi',p:1},{n:'Pelagon',p:2},{n:'Mutant Cosmic',p:2},{n:'Megalodon',p:3},{n:'Glacial',p:3},{n:'FB 100+',p:3},{n:'FB Maxton',p:5},{n:'Forgotten',p:5}];
@@ -686,6 +672,30 @@ tbody tr.cr.pos input.team-name:focus,tbody tr.cr.pos input.team-nick:focus{back
     render();
     if(document.body.classList.contains('search-open')) searchInput.focus();
   });
+
+  // ===== Popup Tambah / Kurang Poin =====
+  const pmModal = document.getElementById('pmModal');
+  const pmGrid = document.getElementById('pmGrid');
+  let pmTarget = null;
+  const pmNums = [1,2,3,4,5,6,7,8,9,10];
+  pmGrid.innerHTML =
+    pmNums.map(n => '<button type="button" class="pm-plus" data-v="' + n + '">+' + n + '</button>').join('') +
+    pmNums.map(n => '<button type="button" class="pm-minus" data-v="-' + n + '">\u2212' + n + '</button>').join('');
+  function openPm(id){
+    pmTarget = id;
+    document.getElementById('pmSub').textContent = 'Peserta #' + id;
+    pmModal.classList.add('open');
+  }
+  function closePm(){ pmModal.classList.remove('open'); pmTarget = null; }
+  pmGrid.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if(!b || pmTarget === null) return;
+    applyDelta(getT(pmTarget), Number(b.dataset.v), 'Manual');
+    closePm();
+    render();
+  });
+  document.getElementById('pmClose').addEventListener('click', closePm);
+  pmModal.addEventListener('click', e => { if(e.target === pmModal) closePm(); });
 
   let renderTimer = null, pendingFocus = null;
   function scheduleRender(delay = 550){
@@ -734,7 +744,7 @@ tbody tr.cr.pos input.team-name:focus,tbody tr.cr.pos input.team-nick:focus{back
     return tr;
   }
 
-  // Baris header clan: nama clan, ringkasan, total (tanpa angka medali)
+  // Baris header clan: nama clan, ringkasan, total
   function buildClanRow(c){
     const r = compRank[c.id], total = clanTotal(c);
     const tr = document.createElement('tr');
@@ -766,10 +776,10 @@ tbody tr.cr.pos input.team-name:focus,tbody tr.cr.pos input.team-nick:focus{back
     if(pos % 2) tr.classList.add('alt');
     if(team.red) tr.classList.add('red');
 
-    // NO = huruf akun (A/B/C); klik = tandai merah / batalkan
+    // NO = urutan akun dalam clan; klik = tandai merah / batalkan
     const tdRank = document.createElement('td');
     tdRank.className = 'rank red-toggle';
-    tdRank.textContent = pos + 1;   // urutan akun dalam clan (poin terbanyak di atas)
+    tdRank.textContent = pos + 1;
     tdRank.title = 'Klik untuk tandai MERAH / batalkan';
     tdRank.addEventListener('click', () => { team.red = !team.red; tr.classList.toggle('red', team.red); });
 
@@ -798,46 +808,16 @@ tbody tr.cr.pos input.team-name:focus,tbody tr.cr.pos input.team-nick:focus{back
     wrap.className = 'points-wrap';
     const pointsInput = document.createElement('input');
     pointsInput.type = 'text'; pointsInput.className = 'points'; pointsInput.value = team.points; pointsInput.readOnly = true; pointsInput.tabIndex = -1;
-    const addInput = document.createElement('input');
-    addInput.type = 'number'; addInput.className = 'points-add'; addInput.placeholder = '±'; addInput.value = '0'; addInput.min = '-999';
-    addInput.title = 'Angka positif = tambah, minus (mis. -2) = kurangi poin akun ini, lalu Enter atau tombol +';
-    addInput.dataset.id = team.id; addInput.dataset.field = 'add';
-    addInput.addEventListener('focus', e => e.target.select());
-    function commitAdd(useDefault){
-      let delta = parseInt(addInput.value, 10);
-      if(isNaN(delta) && useDefault === true) delta = getPlusDefault();
-      if(isNaN(delta) || delta === 0){ addInput.value = '0'; return; }
-      applyDelta(team, delta, 'Manual');
-      pointsInput.value = team.points;
-      addInput.value = '0';
-      pendingFocus = { id: team.id, field: 'add' };
-      scheduleRender();
-    }
-    addInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); commitAdd(); } });
-    addInput.addEventListener('blur', () => { if(addInput.value !== '' && addInput.value !== '0') commitAdd(); else addInput.value = '0'; });
-    const addBtn = document.createElement('button');
-    addBtn.type = 'button'; addBtn.className = 'add-btn'; addBtn.textContent = '+';
-    addBtn.title = 'Tambah poin (kolom ± kosong = pakai nilai bawaan 1)';
-    addBtn.addEventListener('mousedown', e => e.preventDefault());
-    addBtn.addEventListener('click', () => commitAdd(true));
+    const pmBtn = document.createElement('button');
+    pmBtn.type = 'button'; pmBtn.className = 'pm-btn'; pmBtn.textContent = '±';
+    pmBtn.title = 'Tambah / kurangi poin';
+    pmBtn.addEventListener('click', () => openPm(team.id));
     const fishBtn = document.createElement('button');
     fishBtn.type = 'button'; fishBtn.className = 'fish-btn'; fishBtn.title = 'Tambah poin berdasarkan jenis ikan';
     fishBtn.innerHTML = '<img src="' + FISH_IMG + '" alt="Tambah poin" draggable="false">';
     fishBtn.addEventListener('click', () => openFish(team.id));
-    // Tombol atas / bawah sendiri (selalu terlihat): mengubah angka di kotak ± sebanyak 1
-    const spin = document.createElement('span');
-    spin.className = 'spin';
-    [['up', 1, 'M1 5L5 1l4 4z'], ['down', -1, 'M1 1l4 4 4-4z']].forEach(([cls, step, d]) => {
-      const b = document.createElement('button');
-      b.type = 'button'; b.className = 'spin-' + cls; b.title = step > 0 ? 'Naik' : 'Turun';
-      b.innerHTML = '<svg viewBox="0 0 10 6"><path d="' + d + '" fill="currentColor"/></svg>';
-      b.addEventListener('mousedown', e => e.preventDefault());
-      b.addEventListener('click', () => { addInput.value = String((parseInt(addInput.value, 10) || 0) + step); });
-      spin.appendChild(b);
-    });
-    wrap.append(pointsInput, addInput, spin, addBtn, fishBtn);
+    wrap.append(pointsInput, pmBtn, fishBtn);
     tdPoints.appendChild(wrap);
-
 
     const tdJoin = document.createElement('td');
     tdJoin.className = 'center';
