@@ -386,9 +386,32 @@ tbody tr.cr input.team-nick:focus::placeholder{
 
 /* ===== Tulisan Created diperbesar ===== */
 .copyright{font-size:calc(var(--fs)*2.4);margin-top:10px;padding-top:4px;line-height:1.2}
+
+/* ===== NOTIFIKASI POIN + PERINGATAN WAKTU ===== */
+#toastBox{position:fixed;bottom:calc(84px + env(safe-area-inset-bottom,0px));right:18px;width:480px;max-width:calc(100vw - 36px);display:flex;flex-direction:column;gap:10px;z-index:300;pointer-events:none}
+.toast{display:flex;align-items:center;gap:16px;padding:14px 20px;border-radius:14px;background:#1FA35C;color:#fff;border:3px solid #fff;box-shadow:0 8px 24px rgba(0,0,0,.45);font-weight:700;animation:toastIn .35s cubic-bezier(.2,1.2,.4,1)}
+.toast.neg{background:#D32F2F}
+.toast.warn{background:#EF6C00}
+.toast.info{background:#1565C0}
+.toast.out{animation:toastOut .35s ease-in forwards}
+.toast .tp{flex:none;min-width:2.1em;text-align:center;font-size:44px;font-weight:800;line-height:1;text-shadow:0 2px 3px rgba(0,0,0,.35)}
+.toast .tx{flex:1;min-width:0}
+.toast .tn{display:block;font-size:24px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toast .tl{display:block;font-size:17px;font-weight:600;opacity:.92;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toast.big .tn{font-size:30px;white-space:normal}
+@keyframes toastIn{from{opacity:0;transform:translateX(60px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateX(60px)}}
+/* Hitung mundur besar di tengah layar (10 detik terakhir) */
+#bigCount{position:fixed;left:18px;bottom:calc(14px + env(safe-area-inset-bottom,0px));display:none;align-items:center;justify-content:center;flex-direction:column;z-index:250;pointer-events:none;padding:.1em .45em .2em;border-radius:24px;background:rgba(183,28,28,.88);border:4px solid #fff;box-shadow:0 8px 28px rgba(0,0,0,.5)}
+#bigCount.show{display:flex}
+#bigCount b{font-size:min(22vw,200px);font-weight:800;line-height:1;color:#fff;text-shadow:0 0 40px rgba(255,80,80,.95),0 8px 0 rgba(0,0,0,.45);animation:bcPop 1s ease-out}
+#bigCount span{margin-top:.1em;font-size:min(3vw,22px);font-weight:800;letter-spacing:3px;color:#fff;text-shadow:0 3px 6px rgba(0,0,0,.6)}
+@keyframes bcPop{0%{transform:scale(1.7);opacity:0}25%{transform:scale(1);opacity:1}100%{transform:scale(.85);opacity:.85}}
 </style>
 </head>
 <body>
+<div id="toastBox"></div>
+<div id="bigCount"><b id="bigNum">10</b><span>DETIK TERAKHIR</span></div>
 <div class="wrap">
   <div class="panel">
     <div class="top-row">
@@ -444,7 +467,7 @@ tbody tr.cr input.team-nick:focus::placeholder{
   <div class="modal-head"><div class="modal-title">Atur Waktu<small>Durasi timer</small></div><button type="button" class="modal-close" id="tModalClose">&#10005;</button></div>
   <div class="modal-body">
     <div class="t-fields"><label>Jam<input type="number" id="tH" min="0" max="99" value="1"></label><label>Menit<input type="number" id="tM" min="0" max="59" value="10"></label><label>Detik<input type="number" id="tS" min="0" max="59" value="0"></label></div>
-    <div class="adm-hint">Tekan Mulai: countdown 10 detik, lalu timer jalan. Peringatan saat sisa 5 menit.</div>
+    <div class="adm-hint">Tekan Mulai: countdown 10 detik, lalu timer jalan. Peringatan di sisa 5 menit, 1 menit, dan hitung mundur 10 detik terakhir.</div>
     <div style="text-align:right;margin-top:14px"><button type="button" class="fish-ok" id="tOk">Simpan</button></div>
   </div>
 </div></div>
@@ -493,7 +516,50 @@ tbody tr.cr input.team-nick:focus::placeholder{
   const searchClear = document.getElementById('searchClear');
   const plusDefaultInput = { value: '0' };   // badge +POINT dihapus
 
-  // Ubah poin akun: poin, history, kedip akun + kedip clan
+  // ===== SUARA + NOTIFIKASI (toast) =====
+  let audioCtx = null;
+  // type: 'sine' | 'square' | 'triangle' | 'sawtooth' (ganti di sini untuk ubah karakter suara)
+  function beep(freq, len, vol, type){
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      if(audioCtx.state === 'suspended') audioCtx.resume();
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain(), t0 = audioCtx.currentTime, d = len || .15, v = vol || .25;
+      o.type = type || 'sine'; o.frequency.value = freq;
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(v, t0 + .01);          // naik cepat (tanpa bunyi "klik")
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + d);       // turun halus
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t0); o.stop(t0 + d + .02);
+    } catch(e) {}
+  }
+  function beepSeq(list){ list.forEach(([f,l,at,type]) => setTimeout(() => beep(f, l, .3, type), at)); }
+  // Nada poin: naik = tambah (3 nada naik ceria), turun = kurang (2 nada turun)
+  const SND_UP = [[988,.09,0,'square'],[1319,.28,90,'square']];            // 'ding' ala koin
+  const SND_DOWN = [[330,.14,0,'sawtooth'],[220,.14,130,'sawtooth'],[147,.32,260,'sawtooth']];   // 'bloop' turun
+
+  const toastBox = document.getElementById('toastBox');
+  function showToast(opts){
+    // opts: { pts, name, line, cls, ms }
+    const el = document.createElement('div');
+    el.className = 'toast ' + (opts.cls || '') + (opts.pts === undefined ? ' big' : '');
+    el.innerHTML = (opts.pts !== undefined ? '<span class="tp"></span>' : '') + '<span class="tx"><span class="tn"></span><span class="tl"></span></span>';
+    if(opts.pts !== undefined) el.querySelector('.tp').textContent = opts.pts;
+    el.querySelector('.tn').textContent = opts.name || '';
+    el.querySelector('.tl').textContent = opts.line || '';
+    if(!opts.line) el.querySelector('.tl').remove();
+    toastBox.appendChild(el);
+    while(toastBox.children.length > 4) toastBox.firstChild.remove();   // maksimal 4 notifikasi tampil
+    setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 380); }, opts.ms || 3500);
+  }
+  function notifyPoints(t, delta, label){
+    const c = getC(t.clan);
+    const who = (t.nickname || '').trim() || (t.name || '').trim() || (c.name + ' · ' + LETTER[t.slot]);
+    const info = c.name + (label ? ' · ' + label : '') + ' · total ' + t.points;
+    showToast({ pts: (delta > 0 ? '+' : '') + delta, name: who, line: info, cls: delta > 0 ? '' : 'neg' });
+    beepSeq(delta > 0 ? SND_UP : SND_DOWN);
+  }
+
+  // Ubah poin akun: poin, history, kedip akun + kedip clan + notifikasi & suara
   function applyDelta(t, delta, label){
     const np = Math.max(0, t.points + delta), actual = np - t.points;
     t.points = np;
@@ -501,6 +567,7 @@ tbody tr.cr input.team-nick:focus::placeholder{
       const f = { dir: actual > 0 ? 'up' : 'down', time: Date.now() };
       t.flash = f; getC(t.clan).flash = f;
       t.history.push({ delta: actual, after: np, time: Date.now(), label });
+      notifyPoints(t, actual, label);
     }
     return actual;
   }
@@ -906,33 +973,31 @@ tbody tr.cr input.team-nick:focus::placeholder{
   mapInput.addEventListener('input', () => { mapPrev = ''; });
   mapInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); mapInput.blur(); } });
 
-  // ===== TIMER: countdown 10 detik sebelum mulai, peringatan sisa 5 menit =====
+  // ===== TIMER: countdown 10 detik sebelum mulai; peringatan 5 menit, 1 menit, dan 10 detik terakhir =====
   const tDisp = document.getElementById('timerDisp'), tTxt = document.getElementById('timerTxt'), tSub = document.getElementById('timerSub');
   const tPlay = document.getElementById('tPlay'), tModal = document.getElementById('tModal');
-  const PRE_MS = 10000, WARN_MS = 5 * 60 * 1000;
+  const bigCount = document.getElementById('bigCount'), bigNum = document.getElementById('bigNum');
+  const PRE_MS = 10000, WARN_MS = 5 * 60 * 1000, MIN1_MS = 60 * 1000, LAST_MS = 10 * 1000;
   const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg>';
   const ICON_PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>';
   const ICON_STOP = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>';
-  let tDur = 70 * 60 * 1000, tState = 'idle', tRemain = tDur, tEnd = 0, cdEnd = 0, tWarned = false, lastCd = null, audioCtx = null;
+  let tDur = 70 * 60 * 1000, tState = 'idle', tRemain = tDur, tEnd = 0, cdEnd = 0, tWarned = false, tWarned1 = false, lastCd = null, lastSec = null;
   function fmtT(ms){
     const s = Math.max(0, Math.ceil(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
     return h + ':' + String(m).padStart(2,'0') + ':' + String(x).padStart(2,'0');
   }
-  function beep(freq, len, vol){
-    try {
-      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-      if(audioCtx.state === 'suspended') audioCtx.resume();
-      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-      o.frequency.value = freq; g.gain.value = vol || .25;
-      o.connect(g); g.connect(audioCtx.destination);
-      o.start(); o.stop(audioCtx.currentTime + (len || .15));
-    } catch(e) {}
+  // Angka besar di tengah layar (10..1)
+  function showBig(n){
+    bigNum.textContent = n;
+    bigNum.style.animation = 'none'; void bigNum.offsetWidth; bigNum.style.animation = '';   // ulang animasi
+    bigCount.classList.add('show');
   }
-  function beepSeq(list){ list.forEach(([f,l,at]) => setTimeout(() => beep(f, l, .3), at)); }
+  function hideBig(){ bigCount.classList.remove('show'); }
   function timerUI(){
     const now = Date.now();
     tDisp.classList.remove('cd','warn','end','paused');
     tSub.textContent = '';
+    if(tState !== 'run') hideBig();
     if(tState === 'cd'){
       tTxt.textContent = Math.max(1, Math.ceil((cdEnd - now) / 1000));
       tDisp.classList.add('cd'); tSub.innerHTML = 'MULAI<br>DALAM';
@@ -955,20 +1020,45 @@ tbody tr.cr input.team-nick:focus::placeholder{
     if(tState === 'cd'){
       const left = cdEnd - now, n = Math.ceil(left / 1000);
       if(n !== lastCd){ lastCd = n; if(n > 0) beep(n <= 3 ? 1100 : 700, .12, .25); }
-      if(left <= 0){ tState = 'run'; tEnd = now + tRemain; beep(1500, .6, .35); }
+      if(left <= 0){
+        tState = 'run'; tEnd = now + tRemain; beep(1319, .5, .35, 'triangle');
+        showToast({ name: 'TIMER MULAI!', line: 'Selamat bertanding', cls: 'info', ms: 3000 });
+      }
     } else if(tState === 'run'){
       tRemain = tEnd - now;
-      if(!tWarned && tRemain <= WARN_MS){ tWarned = true; beepSeq([[1000,.2,0],[1000,.2,300],[1000,.2,600]]); }
-      if(tRemain <= 0){ tRemain = 0; tState = 'end'; beepSeq([[1200,.3,0],[1200,.3,450],[1200,.3,900],[900,.8,1350]]); }
+      // Peringatan sisa 5 menit
+      if(!tWarned && tRemain <= WARN_MS && tRemain > MIN1_MS){
+        tWarned = true; beepSeq([[784,.35,0,'triangle'],[988,.35,350,'triangle'],[1175,.5,700,'triangle']]);
+        showToast({ name: 'SISA 5 MENIT', line: 'Waktu hampir habis', cls: 'warn', ms: 4500 });
+      }
+      // Peringatan sisa 1 menit
+      if(!tWarned1 && tRemain <= MIN1_MS && tRemain > 0){
+        tWarned = true; tWarned1 = true;
+        beepSeq([[900,.3,0,'square'],[1500,.3,320,'square'],[900,.3,640,'square'],[1500,.3,960,'square'],[900,.3,1280,'square'],[1500,.5,1600,'square']]);
+        showToast({ name: 'SISA 1 MENIT!', line: 'Segera selesaikan tarikan ikan', cls: 'neg', ms: 6000 });
+      }
+      // Hitung mundur 10 detik terakhir: angka besar + bunyi tiap detik
+      if(tRemain <= LAST_MS && tRemain > 0){
+        const n = Math.ceil(tRemain / 1000);
+        if(n !== lastSec){
+          lastSec = n; showBig(n);
+          beep(n <= 3 ? 1800 : 1200, n <= 3 ? .3 : .08, .4, n <= 3 ? 'square' : 'triangle');   // tik pendek, 3 detik terakhir lebih tinggi
+        }
+      }
+      if(tRemain <= 0){
+        tRemain = 0; tState = 'end'; hideBig();
+        beepSeq([[1568,.25,0,'square'],[1568,.25,300,'square'],[1568,.25,600,'square'],[784,1.2,900,'sawtooth']]);
+        showToast({ name: 'WAKTU HABIS!', line: 'Klasemen dikunci, cek poin akhir', cls: 'neg', ms: 8000 });
+      }
     }
     timerUI();
   }
-  function timerReset(){ tState = 'idle'; tRemain = tDur; tWarned = false; lastCd = null; timerUI(); }
+  function timerReset(){ tState = 'idle'; tRemain = tDur; tWarned = false; tWarned1 = false; lastCd = null; lastSec = null; hideBig(); timerUI(); }
   tPlay.addEventListener('click', () => {
     beep(1, .01, 0);  // aktifkan audio (butuh klik pengguna)
     if(tState === 'idle' || tState === 'end'){
       if(tState === 'end') tRemain = tDur;
-      tWarned = tRemain <= WARN_MS; lastCd = null;
+      tWarned = tRemain <= WARN_MS; tWarned1 = tRemain <= MIN1_MS; lastCd = null; lastSec = null;
       tState = 'cd'; cdEnd = Date.now() + PRE_MS;
     } else if(tState === 'cd'){ tState = 'idle'; }
     else if(tState === 'run'){ tRemain = tEnd - Date.now(); tState = 'paused'; }
