@@ -387,31 +387,66 @@ tbody tr.cr input.team-nick:focus::placeholder{
 /* ===== Tulisan Created diperbesar ===== */
 .copyright{font-size:calc(var(--fs)*2.4);margin-top:10px;padding-top:4px;line-height:1.2}
 
-/* ===== NOTIFIKASI POIN + PERINGATAN WAKTU ===== */
-#toastBox{position:fixed;bottom:calc(84px + env(safe-area-inset-bottom,0px));right:18px;width:480px;max-width:calc(100vw - 36px);display:flex;flex-direction:column;gap:10px;z-index:300;pointer-events:none}
-.toast{display:flex;align-items:center;gap:16px;padding:14px 20px;border-radius:14px;background:#1FA35C;color:#fff;border:3px solid #fff;box-shadow:0 8px 24px rgba(0,0,0,.45);font-weight:700;animation:toastIn .35s cubic-bezier(.2,1.2,.4,1)}
-.toast.neg{background:#D32F2F}
-.toast.warn{background:#EF6C00}
-.toast.info{background:#1565C0}
-.toast.out{animation:toastOut .35s ease-in forwards}
-.toast .tp{flex:none;min-width:2.1em;text-align:center;font-size:44px;font-weight:800;line-height:1;text-shadow:0 2px 3px rgba(0,0,0,.35)}
-.toast .tx{flex:1;min-width:0}
-.toast .tn{display:block;font-size:24px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.toast .tl{display:block;font-size:17px;font-weight:600;opacity:.92;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.toast.big .tn{font-size:30px;white-space:normal}
-@keyframes toastIn{from{opacity:0;transform:translateX(60px) scale(.9)}to{opacity:1;transform:none}}
-@keyframes toastOut{to{opacity:0;transform:translateX(60px)}}
-/* Hitung mundur besar di tengah layar (10 detik terakhir) */
-#bigCount{position:fixed;left:18px;bottom:calc(14px + env(safe-area-inset-bottom,0px));display:none;align-items:center;justify-content:center;flex-direction:column;z-index:250;pointer-events:none;padding:.1em .45em .2em;border-radius:24px;background:rgba(183,28,28,.88);border:4px solid #fff;box-shadow:0 8px 28px rgba(0,0,0,.5)}
-#bigCount.show{display:flex}
-#bigCount b{font-size:min(22vw,200px);font-weight:800;line-height:1;color:#fff;text-shadow:0 0 40px rgba(255,80,80,.95),0 8px 0 rgba(0,0,0,.45);animation:bcPop 1s ease-out}
-#bigCount span{margin-top:.1em;font-size:min(3vw,22px);font-weight:800;letter-spacing:3px;color:#fff;text-shadow:0 3px 6px rgba(0,0,0,.6)}
-@keyframes bcPop{0%{transform:scale(1.7);opacity:0}25%{transform:scale(1);opacity:1}100%{transform:scale(.85);opacity:.85}}
+/* ===== MVP: tanda di baris akun dengan poin tertinggi ===== */
+tbody tr.cr.mvp:not(.red):not(.search-hit) td,
+tbody tr.cr.mvp:not(.red):not(.search-hit) td.name-cell,
+tbody tr.cr.mvp:not(.red):not(.search-hit) td.poin-cell{background:#FFC400;color:#000}
+tbody tr.cr.mvp:not(.red):not(.search-hit) td.rank{background:#FFC400;color:#000}
+tbody tr.cr.mvp:not(.red):not(.search-hit) input.team-name,
+tbody tr.cr.mvp:not(.red):not(.search-hit) input.team-nick{color:#000}
+tbody tr.cr.mvp:not(.red):not(.search-hit) input.team-name::placeholder,
+tbody tr.cr.mvp:not(.red):not(.search-hit) input.team-nick::placeholder{color:#6B5000}
+tbody tr.mvp td.rank{position:relative}
+tbody tr.mvp td.rank::before{content:'👑';position:absolute;top:3px;left:50%;transform:translateX(-50%);font-size:14px;line-height:1;pointer-events:none}
+tbody tr.mvp td.rank::after{content:'MVP';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:800;letter-spacing:.5px;line-height:1;color:#2A1D00;pointer-events:none}
+
+
+/* ===== 10 detik terakhir timer: merah pekat, membesar-mengecil ===== */
+.timer-disp.fin:not(.cd):not(.end),
+html[data-theme="dark"] .timer-disp.fin:not(.cd):not(.end){background:#C62828;border-color:#7F0000;color:#fff;animation:tPulse .5s ease-in-out infinite alternate}
+@keyframes tPulse{from{transform:scale(1)}to{transform:scale(1.1)}}
+
+/* ===== Poin paling kecil saat waktu habis: biru, label LAST ===== */
+tbody tr.cr.low:not(.red):not(.search-hit) td,
+tbody tr.cr.low:not(.red):not(.search-hit) td.name-cell,
+tbody tr.cr.low:not(.red):not(.search-hit) td.poin-cell,
+tbody tr.cr.low:not(.red):not(.search-hit) td.rank{background:#1565C0;color:#fff}
+tbody tr.cr.low:not(.red):not(.search-hit) input.team-name,
+tbody tr.cr.low:not(.red):not(.search-hit) input.team-nick{color:#fff}
+tbody tr.cr.low:not(.red):not(.search-hit) input.team-name::placeholder,
+tbody tr.cr.low:not(.red):not(.search-hit) input.team-nick::placeholder{color:#BBDEFB}
+tbody tr.low td.rank{position:relative}
+tbody tr.low td.rank::before{content:'⬇';position:absolute;top:3px;left:50%;transform:translateX(-50%);font-size:13px;line-height:1;pointer-events:none}
+tbody tr.low td.rank::after{content:'LAST';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:800;letter-spacing:.5px;line-height:1;color:#fff;pointer-events:none}
+
+/* ===== Popup ± muncul di dekat tombol yang diklik ===== */
+#pmModal{background:transparent;align-items:flex-start;justify-content:flex-start;padding:0}
+#pmModal .modal-box{position:absolute;left:0;top:0;width:min(310px,calc(100vw - 16px));max-width:none}
+#pmModal .modal-head{padding:8px 12px}
+#pmModal .modal-title{font-size:18px}
+#pmModal .modal-title small{font-size:14px}
+#pmModal .modal-close{width:30px;height:30px;font-size:16px}
+#pmModal .pm-grid{gap:6px;padding:10px}
+#pmModal .pm-grid button{height:40px;font-size:16px;border-radius:6px}
+
+/* ===== Notifikasi perubahan poin ===== */
+#ptToast{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:50%;z-index:200;
+  transform:translate(-50%,-30px);opacity:0;pointer-events:none;
+  display:flex;align-items:center;gap:28px;min-width:340px;padding:16px 30px;
+  background:#1C2429;border:3px solid #1FA35C;border-radius:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,.55);color:#fff;
+  transition:transform .25s ease,opacity .25s ease}
+#ptToast.show{transform:translate(-50%,0);opacity:1}
+#ptToast .pt-delta{font-size:44px;font-weight:800;line-height:1;color:#2ED573}
+#ptToast.neg{border-color:#E5484D}
+#ptToast.neg .pt-delta{color:#FF6B6B}
+#ptToast .pt-who{font-size:26px;font-weight:800;line-height:1.15}
+#ptToast .pt-after{font-size:22px;font-weight:700;color:#C9D3D0;margin-top:2px}
+#ptToast .pt-after b{font-size:1.5em;color:#FFC400;margin-left:.1em}
+#ptToast .pt-label{font-size:18px;font-weight:700;color:#FFA726;margin-top:2px}
 </style>
 </head>
 <body>
-<div id="toastBox"></div>
-<div id="bigCount"><b id="bigNum">10</b><span>DETIK TERAKHIR</span></div>
 <div class="wrap">
   <div class="panel">
     <div class="top-row">
@@ -467,7 +502,7 @@ tbody tr.cr input.team-nick:focus::placeholder{
   <div class="modal-head"><div class="modal-title">Atur Waktu<small>Durasi timer</small></div><button type="button" class="modal-close" id="tModalClose">&#10005;</button></div>
   <div class="modal-body">
     <div class="t-fields"><label>Jam<input type="number" id="tH" min="0" max="99" value="1"></label><label>Menit<input type="number" id="tM" min="0" max="59" value="10"></label><label>Detik<input type="number" id="tS" min="0" max="59" value="0"></label></div>
-    <div class="adm-hint">Tekan Mulai: countdown 10 detik, lalu timer jalan. Peringatan di sisa 5 menit, 1 menit, dan hitung mundur 10 detik terakhir.</div>
+    <div class="adm-hint">Tekan Mulai: countdown 10 detik, lalu timer jalan. Peringatan saat sisa 5 menit.</div>
     <div style="text-align:right;margin-top:14px"><button type="button" class="fish-ok" id="tOk">Simpan</button></div>
   </div>
 </div></div>
@@ -480,6 +515,9 @@ tbody tr.cr input.team-nick:focus::placeholder{
   <div class="modal-head"><div class="modal-title">Tambah / Kurang Poin<small id="pmSub"></small></div><button type="button" class="modal-close" id="pmClose">✕</button></div>
   <div class="pm-grid" id="pmGrid"></div>
 </div></div>
+
+<!-- Notifikasi perubahan poin -->
+<div id="ptToast"><span class="pt-delta"></span><div><div class="pt-who"></div><div class="pt-after">Poin jadi <b></b></div><div class="pt-label"></div></div></div>
 
 <script>
   // ===== DATA: 6 clan x 3 akun (id akun 1-18; clan = ceil(id/3)) =====
@@ -516,50 +554,23 @@ tbody tr.cr input.team-nick:focus::placeholder{
   const searchClear = document.getElementById('searchClear');
   const plusDefaultInput = { value: '0' };   // badge +POINT dihapus
 
-  // ===== SUARA + NOTIFIKASI (toast) =====
-  let audioCtx = null;
-  // type: 'sine' | 'square' | 'triangle' | 'sawtooth' (ganti di sini untuk ubah karakter suara)
-  function beep(freq, len, vol, type){
-    try {
-      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-      if(audioCtx.state === 'suspended') audioCtx.resume();
-      const o = audioCtx.createOscillator(), g = audioCtx.createGain(), t0 = audioCtx.currentTime, d = len || .15, v = vol || .25;
-      o.type = type || 'sine'; o.frequency.value = freq;
-      g.gain.setValueAtTime(0.0001, t0);
-      g.gain.exponentialRampToValueAtTime(v, t0 + .01);          // naik cepat (tanpa bunyi "klik")
-      g.gain.exponentialRampToValueAtTime(0.0001, t0 + d);       // turun halus
-      o.connect(g); g.connect(audioCtx.destination);
-      o.start(t0); o.stop(t0 + d + .02);
-    } catch(e) {}
-  }
-  function beepSeq(list){ list.forEach(([f,l,at,type]) => setTimeout(() => beep(f, l, .3, type), at)); }
-  // Nada poin: naik = tambah (3 nada naik ceria), turun = kurang (2 nada turun)
-  const SND_UP = [[988,.09,0,'square'],[1319,.28,90,'square']];            // 'ding' ala koin
-  const SND_DOWN = [[330,.14,0,'sawtooth'],[220,.14,130,'sawtooth'],[147,.32,260,'sawtooth']];   // 'bloop' turun
-
-  const toastBox = document.getElementById('toastBox');
-  function showToast(opts){
-    // opts: { pts, name, line, cls, ms }
-    const el = document.createElement('div');
-    el.className = 'toast ' + (opts.cls || '') + (opts.pts === undefined ? ' big' : '');
-    el.innerHTML = (opts.pts !== undefined ? '<span class="tp"></span>' : '') + '<span class="tx"><span class="tn"></span><span class="tl"></span></span>';
-    if(opts.pts !== undefined) el.querySelector('.tp').textContent = opts.pts;
-    el.querySelector('.tn').textContent = opts.name || '';
-    el.querySelector('.tl').textContent = opts.line || '';
-    if(!opts.line) el.querySelector('.tl').remove();
-    toastBox.appendChild(el);
-    while(toastBox.children.length > 4) toastBox.firstChild.remove();   // maksimal 4 notifikasi tampil
-    setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 380); }, opts.ms || 3500);
-  }
-  function notifyPoints(t, delta, label){
-    const c = getC(t.clan);
-    const who = (t.nickname || '').trim() || (t.name || '').trim() || (c.name + ' · ' + LETTER[t.slot]);
-    const info = c.name + (label ? ' · ' + label : '') + ' · total ' + t.points;
-    showToast({ pts: (delta > 0 ? '+' : '') + delta, name: who, line: info, cls: delta > 0 ? '' : 'neg' });
-    beepSeq(delta > 0 ? SND_UP : SND_DOWN);
+  // Notifikasi perubahan poin (muncul di tengah atas, hilang otomatis)
+  let ptToastTimer = null;
+  function showPtToast(t, delta, after, label){
+    const el = document.getElementById('ptToast');
+    el.classList.toggle('neg', delta < 0);
+    el.querySelector('.pt-delta').textContent = (delta > 0 ? '+' : '\u2212') + Math.abs(delta);
+    el.querySelector('.pt-who').textContent = 'Peserta #' + t.id;
+    el.querySelector('.pt-after b').textContent = after;
+    const lb = el.querySelector('.pt-label');
+    lb.textContent = label || '';
+    lb.style.display = label ? 'block' : 'none';
+    el.classList.add('show');
+    clearTimeout(ptToastTimer);
+    ptToastTimer = setTimeout(() => el.classList.remove('show'), 2500);
   }
 
-  // Ubah poin akun: poin, history, kedip akun + kedip clan + notifikasi & suara
+  // Ubah poin akun: poin, history, kedip akun + kedip clan
   function applyDelta(t, delta, label){
     const np = Math.max(0, t.points + delta), actual = np - t.points;
     t.points = np;
@@ -567,7 +578,7 @@ tbody tr.cr input.team-nick:focus::placeholder{
       const f = { dir: actual > 0 ? 'up' : 'down', time: Date.now() };
       t.flash = f; getC(t.clan).flash = f;
       t.history.push({ delta: actual, after: np, time: Date.now(), label });
-      notifyPoints(t, actual, label);
+      showPtToast(t, actual, np, label);
     }
     return actual;
   }
@@ -583,6 +594,33 @@ tbody tr.cr input.team-nick:focus::placeholder{
       const g = t.binGiven; t.binGiven = 0; applyDelta(t, -g, 'Bin dibatalkan');
     } else return false;
     return true;
+  }
+
+  // Saat waktu habis: akun (yang namanya terisi) dengan poin paling kecil ditandai LAST
+  let timerEnded = false;
+  function updateLowest(){
+    document.querySelectorAll('tr.low').forEach(r => r.classList.remove('low'));
+    if(!timerEnded) return;
+    const players = teams.filter(t => (t.name || '').trim() || (t.nickname || '').trim());
+    if(!players.length) return;
+    const min = Math.min(...players.map(t => t.points));
+    const max = Math.max(...teams.map(t => t.points));
+    if(min === max) return;   // semua sama: tidak ada yang paling kecil
+    players.filter(t => t.points === min).forEach(t => {
+      const row = document.querySelector('tr[data-id="' + t.id + '"]');
+      if(row) row.classList.add('low');
+    });
+  }
+
+  // MVP = akun dengan poin tertinggi. Kalau seri, semua akun yang seri jadi MVP.
+  function updateMvp(){
+    document.querySelectorAll('tr.mvp').forEach(r => r.classList.remove('mvp'));
+    const max = Math.max(0, ...teams.map(t => t.points));
+    if(max <= 0) return;
+    teams.filter(t => t.points === max).forEach(t => {
+      const row = document.querySelector('tr[data-id="' + t.id + '"]');
+      if(row) row.classList.add('mvp');
+    });
   }
 
   function updateSlotInfo(){
@@ -748,15 +786,46 @@ tbody tr.cr input.team-nick:focus::placeholder{
   pmGrid.innerHTML =
     pmNums.map(n => '<button type="button" class="pm-plus" data-v="' + n + '">+' + n + '</button>').join('') +
     pmNums.map(n => '<button type="button" class="pm-minus" data-v="-' + n + '">\u2212' + n + '</button>').join('');
-  function openPm(id){
+  // Suara khusus popup Tambah / Kurang Poin (naik = tambah, turun = kurang)
+  let pmAudio = null;
+  function pmTone(freq, start, len, type){
+    const o = pmAudio.createOscillator(), g = pmAudio.createGain(), t0 = pmAudio.currentTime + start;
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(0.3, t0 + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + len);
+    o.connect(g); g.connect(pmAudio.destination);
+    o.start(t0); o.stop(t0 + len + 0.02);
+  }
+  function pmSound(delta){
+    try {
+      pmAudio = pmAudio || new (window.AudioContext || window.webkitAudioContext)();
+      if(pmAudio.state === 'suspended') pmAudio.resume();
+      if(delta > 0){ pmTone(880, 0, .14, 'sine'); pmTone(1320, .09, .22, 'sine'); }
+      else { pmTone(520, 0, .14, 'triangle'); pmTone(330, .09, .26, 'triangle'); }
+    } catch(e) {}
+  }
+  function openPm(id, anchor){
     pmTarget = id;
     document.getElementById('pmSub').textContent = 'Peserta #' + id;
     pmModal.classList.add('open');
+    const box = pmModal.querySelector('.modal-box');
+    if(anchor){
+      const r = anchor.getBoundingClientRect(), w = box.offsetWidth, h = box.offsetHeight, m = 8;
+      let left = r.left + r.width / 2 - w / 2;
+      let top = r.bottom + 6;
+      if(top + h > window.innerHeight - m) top = r.top - h - 6;   // tidak muat di bawah: tampil di atas tombol
+      left = Math.max(m, Math.min(left, window.innerWidth - w - m));
+      top = Math.max(m, Math.min(top, window.innerHeight - h - m));
+      box.style.left = left + 'px';
+      box.style.top = top + 'px';
+    }
   }
   function closePm(){ pmModal.classList.remove('open'); pmTarget = null; }
   pmGrid.addEventListener('click', e => {
     const b = e.target.closest('button');
     if(!b || pmTarget === null) return;
+    pmSound(Number(b.dataset.v));
     applyDelta(getT(pmTarget), Number(b.dataset.v), 'Manual');
     closePm();
     render();
@@ -854,15 +923,15 @@ tbody tr.cr input.team-nick:focus::placeholder{
     tdName.className = 'name-cell';
     const nameInput = document.createElement('input');
     nameInput.type = 'text'; nameInput.className = 'team-name'; nameInput.value = team.name; nameInput.placeholder = 'Nama Akun';
-    nameInput.addEventListener('input', e => { team.name = e.target.value; tr.classList.toggle('blank', team.name.trim() === ''); updateSlotInfo(); });
+    nameInput.addEventListener('input', e => { team.name = e.target.value; tr.classList.toggle('blank', team.name.trim() === ''); updateSlotInfo(); updateMvp(); });
     tdName.appendChild(nameInput);
     tr.classList.toggle('blank', team.name.trim() === '');
 
     const tdNick = document.createElement('td');
-    tdNick.className = 'name-cell';
+    tdNick.className = 'name-cell mvp-cell';
     const nickInput = document.createElement('input');
     nickInput.type = 'text'; nickInput.className = 'team-nick'; nickInput.value = team.nickname; nickInput.placeholder = 'Nama Display';
-    nickInput.addEventListener('input', e => { team.nickname = e.target.value; applySearch(); });
+    nickInput.addEventListener('input', e => { team.nickname = e.target.value; applySearch(); updateMvp(); });
     tdNick.appendChild(nickInput);
 
     // Warna: nama kosong = putih/hijau muda; nama terisi + poin 0 = merah; poin >0 = hijau
@@ -878,7 +947,7 @@ tbody tr.cr input.team-nick:focus::placeholder{
     const pmBtn = document.createElement('button');
     pmBtn.type = 'button'; pmBtn.className = 'pm-btn'; pmBtn.textContent = '±';
     pmBtn.title = 'Tambah / kurangi poin';
-    pmBtn.addEventListener('click', () => openPm(team.id));
+    pmBtn.addEventListener('click', () => openPm(team.id, pmBtn));
     const fishBtn = document.createElement('button');
     fishBtn.type = 'button'; fishBtn.className = 'fish-btn'; fishBtn.title = 'Tambah poin berdasarkan jenis ikan';
     fishBtn.innerHTML = '<img src="' + FISH_IMG + '" alt="Tambah poin" draggable="false">';
@@ -935,6 +1004,8 @@ tbody tr.cr input.team-nick:focus::placeholder{
     });
     applySearch();
     updateSlotInfo();
+    updateMvp();
+    updateLowest();
     if(pendingFocus){
       const el = document.querySelector('[data-id="' + pendingFocus.id + '"][data-field="' + pendingFocus.field + '"]');
       if(el) el.focus();
@@ -973,38 +1044,42 @@ tbody tr.cr input.team-nick:focus::placeholder{
   mapInput.addEventListener('input', () => { mapPrev = ''; });
   mapInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); mapInput.blur(); } });
 
-  // ===== TIMER: countdown 10 detik sebelum mulai; peringatan 5 menit, 1 menit, dan 10 detik terakhir =====
+  // ===== TIMER: countdown 10 detik sebelum mulai, peringatan sisa 5 menit =====
   const tDisp = document.getElementById('timerDisp'), tTxt = document.getElementById('timerTxt'), tSub = document.getElementById('timerSub');
   const tPlay = document.getElementById('tPlay'), tModal = document.getElementById('tModal');
-  const bigCount = document.getElementById('bigCount'), bigNum = document.getElementById('bigNum');
-  const PRE_MS = 10000, WARN_MS = 5 * 60 * 1000, MIN1_MS = 60 * 1000, LAST_MS = 10 * 1000;
+  const PRE_MS = 10000, WARN_MS = 5 * 60 * 1000, FIN_MS = 10000;
+  let lastFin = null;
   const ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg>';
   const ICON_PAUSE = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>';
   const ICON_STOP = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>';
-  let tDur = 70 * 60 * 1000, tState = 'idle', tRemain = tDur, tEnd = 0, cdEnd = 0, tWarned = false, tWarned1 = false, lastCd = null, lastSec = null;
+  let tDur = 70 * 60 * 1000, tState = 'idle', tRemain = tDur, tEnd = 0, cdEnd = 0, tWarned = false, lastCd = null, audioCtx = null;
   function fmtT(ms){
     const s = Math.max(0, Math.ceil(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
     return h + ':' + String(m).padStart(2,'0') + ':' + String(x).padStart(2,'0');
   }
-  // Angka besar di tengah layar (10..1)
-  function showBig(n){
-    bigNum.textContent = n;
-    bigNum.style.animation = 'none'; void bigNum.offsetWidth; bigNum.style.animation = '';   // ulang animasi
-    bigCount.classList.add('show');
+  function beep(freq, len, vol){
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      if(audioCtx.state === 'suspended') audioCtx.resume();
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.frequency.value = freq; g.gain.value = vol || .25;
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(); o.stop(audioCtx.currentTime + (len || .15));
+    } catch(e) {}
   }
-  function hideBig(){ bigCount.classList.remove('show'); }
+  function beepSeq(list){ list.forEach(([f,l,at]) => setTimeout(() => beep(f, l, .3), at)); }
   function timerUI(){
     const now = Date.now();
-    tDisp.classList.remove('cd','warn','end','paused');
+    tDisp.classList.remove('cd','warn','end','paused','fin');
     tSub.textContent = '';
-    if(tState !== 'run') hideBig();
     if(tState === 'cd'){
       tTxt.textContent = Math.max(1, Math.ceil((cdEnd - now) / 1000));
       tDisp.classList.add('cd'); tSub.innerHTML = 'MULAI<br>DALAM';
       tPlay.innerHTML = ICON_STOP; tPlay.title = 'Batalkan countdown';
     } else if(tState === 'run'){
       tTxt.textContent = fmtT(tRemain);
-      if(tRemain <= WARN_MS) tDisp.classList.add('warn');
+      if(tRemain <= FIN_MS) tDisp.classList.add('fin');
+      else if(tRemain <= WARN_MS) tDisp.classList.add('warn');
       tPlay.innerHTML = ICON_PAUSE; tPlay.title = 'Jeda';
     } else if(tState === 'end'){
       tTxt.textContent = '0:00:00'; tDisp.classList.add('end'); tSub.innerHTML = 'WAKTU<br>HABIS';
@@ -1020,45 +1095,24 @@ tbody tr.cr input.team-nick:focus::placeholder{
     if(tState === 'cd'){
       const left = cdEnd - now, n = Math.ceil(left / 1000);
       if(n !== lastCd){ lastCd = n; if(n > 0) beep(n <= 3 ? 1100 : 700, .12, .25); }
-      if(left <= 0){
-        tState = 'run'; tEnd = now + tRemain; beep(1319, .5, .35, 'triangle');
-        showToast({ name: 'TIMER MULAI!', line: 'Selamat bertanding', cls: 'info', ms: 3000 });
-      }
+      if(left <= 0){ tState = 'run'; tEnd = now + tRemain; beep(1500, .6, .35); }
     } else if(tState === 'run'){
       tRemain = tEnd - now;
-      // Peringatan sisa 5 menit
-      if(!tWarned && tRemain <= WARN_MS && tRemain > MIN1_MS){
-        tWarned = true; beepSeq([[784,.35,0,'triangle'],[988,.35,350,'triangle'],[1175,.5,700,'triangle']]);
-        showToast({ name: 'SISA 5 MENIT', line: 'Waktu hampir habis', cls: 'warn', ms: 4500 });
-      }
-      // Peringatan sisa 1 menit
-      if(!tWarned1 && tRemain <= MIN1_MS && tRemain > 0){
-        tWarned = true; tWarned1 = true;
-        beepSeq([[900,.3,0,'square'],[1500,.3,320,'square'],[900,.3,640,'square'],[1500,.3,960,'square'],[900,.3,1280,'square'],[1500,.5,1600,'square']]);
-        showToast({ name: 'SISA 1 MENIT!', line: 'Segera selesaikan tarikan ikan', cls: 'neg', ms: 6000 });
-      }
-      // Hitung mundur 10 detik terakhir: angka besar + bunyi tiap detik
-      if(tRemain <= LAST_MS && tRemain > 0){
+      if(!tWarned && tRemain <= WARN_MS){ tWarned = true; beepSeq([[1000,.2,0],[1000,.2,300],[1000,.2,600]]); }
+      if(tRemain > 0 && tRemain <= FIN_MS){
         const n = Math.ceil(tRemain / 1000);
-        if(n !== lastSec){
-          lastSec = n; showBig(n);
-          beep(n <= 3 ? 1800 : 1200, n <= 3 ? .3 : .08, .4, n <= 3 ? 'square' : 'triangle');   // tik pendek, 3 detik terakhir lebih tinggi
-        }
+        if(n !== lastFin){ lastFin = n; beep(n <= 3 ? 1500 : 1200, .18, .35); }
       }
-      if(tRemain <= 0){
-        tRemain = 0; tState = 'end'; hideBig();
-        beepSeq([[1568,.25,0,'square'],[1568,.25,300,'square'],[1568,.25,600,'square'],[784,1.2,900,'sawtooth']]);
-        showToast({ name: 'WAKTU HABIS!', line: 'Klasemen dikunci, cek poin akhir', cls: 'neg', ms: 8000 });
-      }
+      if(tRemain <= 0){ tRemain = 0; tState = 'end'; timerEnded = true; updateLowest(); beepSeq([[1200,.3,0],[1200,.3,450],[1200,.3,900],[900,.8,1350]]); }
     }
     timerUI();
   }
-  function timerReset(){ tState = 'idle'; tRemain = tDur; tWarned = false; tWarned1 = false; lastCd = null; lastSec = null; hideBig(); timerUI(); }
+  function timerReset(){ tState = 'idle'; tRemain = tDur; tWarned = false; lastCd = null; timerUI(); }
   tPlay.addEventListener('click', () => {
     beep(1, .01, 0);  // aktifkan audio (butuh klik pengguna)
     if(tState === 'idle' || tState === 'end'){
       if(tState === 'end') tRemain = tDur;
-      tWarned = tRemain <= WARN_MS; tWarned1 = tRemain <= MIN1_MS; lastCd = null; lastSec = null;
+      tWarned = tRemain <= WARN_MS; lastCd = null;
       tState = 'cd'; cdEnd = Date.now() + PRE_MS;
     } else if(tState === 'cd'){ tState = 'idle'; }
     else if(tState === 'run'){ tRemain = tEnd - Date.now(); tState = 'paused'; }
